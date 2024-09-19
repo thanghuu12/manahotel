@@ -1,0 +1,125 @@
+package Controller;
+
+import Dao.CustomerDao;
+import Model.Customer;
+import Util.UploadImage;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+public class CustomerController {
+    @WebServlet("/customer/profile")
+    public static class profile extends HttpServlet{
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            req.getRequestDispatcher("/views/customer/profile.jsp").forward(req, resp);
+        }
+    }
+    @WebServlet("/customer/change-password")
+    public static class changePassword extends HttpServlet{
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String customer_id = req.getSession().getAttribute("customer").toString();
+            String old_password = req.getParameter("old_password");
+            Customer customer = CustomerDao.getCustomerWithId(Integer.parseInt(customer_id));
+            assert customer != null;
+            if (BCrypt.checkpw(old_password, customer.password)){
+                String new_password = req.getParameter("new_password");
+                String re_password = req.getParameter("re_password");
+                if (new_password.equals(re_password)){
+                    String new_hash_password = BCrypt.hashpw(new_password, BCrypt.gensalt());
+                    boolean check = CustomerDao.updatePassword(customer_id, new_hash_password);
+                    if (check){
+                        req.getSession().setAttribute("mess", "success|Đổi mật khẩu thành công");
+                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                    } else {
+                        req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
+                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                    }
+                } else {
+                    req.getSession().setAttribute("mess", "warning|Mật khẩu không trùng khớp");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                }
+            } else {
+                req.getSession().setAttribute("mess", "warning|Mật khẩu cũ không đúng");
+                resp.sendRedirect(req.getContextPath() + "/customer/profile");
+            }
+        }
+    }
+    @WebServlet("/customer/change-avatar")
+    @MultipartConfig(
+            fileSizeThreshold = 1024 * 1024, // 1 MB
+            maxFileSize = 1024 * 1024 * 50,      // 10 MB
+            maxRequestSize = 1024 * 1024 * 50  // 10 MB
+    )
+    public static class changeAvatar extends HttpServlet{
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            try {
+                Part filePart = req.getPart("avatar");
+                String fileName = UploadImage.getFileName(filePart);
+                assert fileName != null;
+                String newFileName = UploadImage.generateUniqueFileName(fileName);
+                String uploadDir = req.getServletContext().getRealPath("/") + "assets/avatar";
+                Path filePath = Paths.get(uploadDir, newFileName);
+                try (InputStream fileContent = filePart.getInputStream()) {
+                    Files.copy(fileContent, filePath, StandardCopyOption.REPLACE_EXISTING);
+                }
+                String customer_id = req.getSession().getAttribute("customer").toString();
+                boolean check = CustomerDao.updateAvatar(customer_id, "assets/avatar/" + newFileName);
+                if (check){
+                    req.getSession().setAttribute("mess", "success|Cập nhật ảnh đại diện thành công");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                } else {
+                    req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
+                resp.sendRedirect(req.getContextPath() + "/customer/profile");
+            }
+        }
+    }
+
+    @WebServlet("/customer/update-profile")
+    public static class updateProfile extends HttpServlet{
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String phone = req.getParameter("phone");
+            String email = req.getParameter("email");
+            String customer_id = req.getSession().getAttribute("customer").toString();
+            if (!CustomerDao.checkEmailExcept(email, customer_id)){
+                req.getSession().setAttribute("mess", "warning|Email đã được sử dụng");
+                resp.sendRedirect(req.getContextPath() + "/customer/profile");
+            } else {
+                if (!CustomerDao.checkPhoneExcept(phone, customer_id)){
+                    req.getSession().setAttribute("mess", "warning|Số điện thoại đã được sử dụng");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                } else {
+                    String name = req.getParameter("name");
+                    boolean check = CustomerDao.updateProfile(name, email, phone, customer_id);
+                    if (check){
+                        req.getSession().setAttribute("mess", "success|Cập nhật thành công");
+                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                    } else {
+                        req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
+                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                    }
+                }
+            }
+        }
+    }
+}
