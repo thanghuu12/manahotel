@@ -19,7 +19,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/">Home</a></li>
-                <li class="breadcrumb-item">Customer</li>
+                <li class="breadcrumb-item">Hotel</li>
                 <li class="breadcrumb-item active">Profile</li>
             </ol>
         </nav>
@@ -32,9 +32,9 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                        <img src="<%=customer.avatar.startsWith("http") || customer.avatar.startsWith("https") ? customer.avatar : request.getContextPath() + "/" + customer.avatar%>" alt="Profile" class="rounded-circle">
-                        <h2><%=customer.name%></h2>
-                        <h3><%=customer.email%></h3>
+                        <img src="<%=hotel.avatar.startsWith("http") || hotel.avatar.startsWith("https") ? hotel.avatar : request.getContextPath() + "/" + hotel.avatar%>" alt="Profile" class="rounded-circle">
+                        <h2>khách sạn: <%=hotel.name%></h2>
+                        <h3><%=hotel.email%></h3>
                         <div class="social-links mt-2">
                             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
                             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -67,11 +67,11 @@
                             <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
 
                                 <!-- Profile Edit Form -->
-                                <form action="<%=request.getContextPath()%>/customer/change-avatar" method="post" enctype="multipart/form-data">
+                                <form action="<%=request.getContextPath()%>/hotel/update-avatar" method="post" enctype="multipart/form-data">
                                     <div class="row mb-3">
                                         <label class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <img src="<%=customer.avatar.startsWith("http") || customer.avatar.startsWith("https") ? customer.avatar : request.getContextPath() + "/" + customer.avatar%>" alt="Profile">
+                                            <img src="<%=hotel.avatar.startsWith("http") || hotel.avatar.startsWith("https") ? hotel.avatar : request.getContextPath() + "/" + hotel.avatar%>" alt="Profile">
                                             <img hidden="hidden" id="preview" src="" alt="Profile">
                                             <span id="file-name"></span>
                                             <div class="pt-2">
@@ -82,34 +82,21 @@
                                         </div>
                                     </div>
                                 </form>
-                                <form action="<%=request.getContextPath()%>/customer/update-profile" method="post">
+                                <form action="<%=request.getContextPath()%>/hotel/profile" method="post">
                                     <div class="row mb-3">
                                         <label for="name" class="col-md-4 col-lg-3 col-form-label">Tên</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input required name="name" type="text" class="form-control" id="name" value="<%=customer.name%>">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="phone" class="col-md-4 col-lg-3 col-form-label">Số điện thoại</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input required name="phone" type="tel" class="form-control" id="phone" value="<%=customer.phone%>">
+                                            <input name="name" type="text" class="form-control" id="name" value="<%=hotel.name%>">
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input required name="email" type="email" class="form-control" id="email" value="<%=customer.email%>">
+                                            <input name="email" type="email" class="form-control" id="email" value="<%=hotel.email%>">
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
-                                        <label for="email" class="col-md-4 col-lg-3 col-form-label">Date of birth</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input required name="dob" type="date" class="form-control" id="dob" value="<%=customer.dob%>">
-                                        </div>
-                                    </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
@@ -120,26 +107,26 @@
 
                             <div class="tab-pane fade pt-3" id="profile-change-password">
                                 <!-- Change Password Form -->
-                                <form action="<%=request.getContextPath()%>/customer/change-password" method="post">
+                                <form action="<%=request.getContextPath()%>/hotel/change-password" method="post">
 
                                     <div class="row mb-3">
                                         <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="old_password" type="password" class="form-control" id="currentPassword">
+                                            <input name="old_pass" type="password" class="form-control" id="currentPassword">
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input required name="new_password" type="password" class="form-control" id="newPassword">
+                                            <input required name="new_pass" type="password" class="form-control" id="newPassword">
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input required name="re_password" type="password" class="form-control" id="renewPassword">
+                                            <input required name="re_new_pass" type="password" class="form-control" id="renewPassword">
                                         </div>
                                     </div>
 

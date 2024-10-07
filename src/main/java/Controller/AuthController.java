@@ -1,7 +1,11 @@
 package Controller;
 
+import Dao.AdminDao;
 import Dao.CustomerDao;
+import Dao.HotelDao;
+import Model.Admin;
 import Model.Customer;
+import Model.Hotel;
 import Util.Config;
 import Util.Mail;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -46,6 +50,8 @@ public class AuthController {
                     if (BCrypt.checkpw(password, customer.password)){
                         req.getSession().setAttribute("mess", "success|Đăng nhập thành công.");
                         req.getSession().setAttribute("customer", customer.id);
+                        req.getSession().removeAttribute("admin");
+                        req.getSession().removeAttribute("hotel");
                         resp.sendRedirect(req.getContextPath() + "/");
                     } else {
                         req.getSession().setAttribute("mess", "warning|Sai email hoặc mật khẩu");
@@ -132,6 +138,8 @@ public class AuthController {
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             req.getSession().removeAttribute("customer");
+            req.getSession().removeAttribute("admin");
+            req.getSession().removeAttribute("hotel");
             resp.sendRedirect(req.getContextPath() + "/");
         }
     }
@@ -241,6 +249,56 @@ public class AuthController {
             } else {
                 req.getSession().setAttribute("mess", "warning|Mật khẩu không trùng khớp");
                 resp.sendRedirect(req.getContextPath() + "/reset-password?token=" + token);
+            }
+        }
+    }
+
+    @WebServlet("/admin/login")
+    public static class adminLogin extends HttpServlet{
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            req.getRequestDispatcher("/views/admin/login.jsp").forward(req, resp);
+        }
+
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+            Admin admin = AdminDao.adminLogin(username, password);
+            if (admin == null){
+                req.getSession().setAttribute("mess", "warning|Sai username hoặc mật khẩu");
+                resp.sendRedirect(req.getContextPath() + "/admin/login");
+            } else {
+                req.getSession().setAttribute("mess", "success|Đăng nhập thành công.");
+                req.getSession().setAttribute("admin", admin.id);
+                req.getSession().removeAttribute("customer");
+                req.getSession().removeAttribute("hotel");
+                resp.sendRedirect(req.getContextPath() + "/");
+            }
+        }
+    }
+
+    @WebServlet("/hotel/login")
+    public static class hotelLogin extends HttpServlet{
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            req.getRequestDispatcher("/views/hotel/login.jsp").forward(req, resp);
+        }
+
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+            String email = req.getParameter("email");
+            String password = req.getParameter("password");
+            Hotel hotel = HotelDao.hotelLogin(email, password);
+            if (hotel != null){
+                req.getSession().setAttribute("mess", "success|Đăng nhập thành công.");
+                req.getSession().setAttribute("hotel", hotel.id);
+                req.getSession().removeAttribute("admin");
+                req.getSession().removeAttribute("customer");
+                resp.sendRedirect(req.getContextPath() + "/");
+            } else {
+                req.getSession().setAttribute("mess", "error|Đăng nhập không thành công.");
+                resp.sendRedirect(req.getContextPath() + "/hotel/login");
             }
         }
     }

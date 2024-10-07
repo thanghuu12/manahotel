@@ -35,25 +35,33 @@ public class CustomerController {
             String old_password = req.getParameter("old_password");
             Customer customer = CustomerDao.getCustomerWithId(Integer.parseInt(customer_id));
             assert customer != null;
-            if (BCrypt.checkpw(old_password, customer.password)){
-                String new_password = req.getParameter("new_password");
-                String re_password = req.getParameter("re_password");
-                if (new_password.equals(re_password)){
-                    String new_hash_password = BCrypt.hashpw(new_password, BCrypt.gensalt());
-                    boolean check = CustomerDao.updatePassword(customer_id, new_hash_password);
-                    if (check){
-                        req.getSession().setAttribute("mess", "success|Đổi mật khẩu thành công");
-                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
-                    } else {
-                        req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
-                        resp.sendRedirect(req.getContextPath() + "/customer/profile");
-                    }
+            if (customer.password == null){
+                updatePassword(req, resp, customer_id);
+            } else {
+                if (BCrypt.checkpw(old_password, customer.password)){
+                    updatePassword(req, resp, customer_id);
                 } else {
-                    req.getSession().setAttribute("mess", "warning|Mật khẩu không trùng khớp");
+                    req.getSession().setAttribute("mess", "warning|Mật khẩu cũ không đúng");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                }
+            }
+        }
+
+        private void updatePassword(HttpServletRequest req, HttpServletResponse resp, String customer_id) throws IOException {
+            String new_password = req.getParameter("new_password");
+            String re_password = req.getParameter("re_password");
+            if (new_password.equals(re_password)){
+                String new_hash_password = BCrypt.hashpw(new_password, BCrypt.gensalt());
+                boolean check = CustomerDao.updatePassword(customer_id, new_hash_password);
+                if (check){
+                    req.getSession().setAttribute("mess", "success|Đổi mật khẩu thành công");
+                    resp.sendRedirect(req.getContextPath() + "/customer/profile");
+                } else {
+                    req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
                     resp.sendRedirect(req.getContextPath() + "/customer/profile");
                 }
             } else {
-                req.getSession().setAttribute("mess", "warning|Mật khẩu cũ không đúng");
+                req.getSession().setAttribute("mess", "warning|Mật khẩu không trùng khớp");
                 resp.sendRedirect(req.getContextPath() + "/customer/profile");
             }
         }
@@ -68,17 +76,9 @@ public class CustomerController {
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             try {
-                Part filePart = req.getPart("avatar");
-                String fileName = UploadImage.getFileName(filePart);
-                assert fileName != null;
-                String newFileName = UploadImage.generateUniqueFileName(fileName);
-                String uploadDir = req.getServletContext().getRealPath("/") + "assets/avatar";
-                Path filePath = Paths.get(uploadDir, newFileName);
-                try (InputStream fileContent = filePart.getInputStream()) {
-                    Files.copy(fileContent, filePath, StandardCopyOption.REPLACE_EXISTING);
-                }
+                String newFileName = UploadImage.saveImage(req, "avatar");
                 String customer_id = req.getSession().getAttribute("customer").toString();
-                boolean check = CustomerDao.updateAvatar(customer_id, "assets/avatar/" + newFileName);
+                boolean check = CustomerDao.updateAvatar(customer_id, newFileName);
                 if (check){
                     req.getSession().setAttribute("mess", "success|Cập nhật ảnh đại diện thành công");
                     resp.sendRedirect(req.getContextPath() + "/customer/profile");
@@ -110,7 +110,8 @@ public class CustomerController {
                     resp.sendRedirect(req.getContextPath() + "/customer/profile");
                 } else {
                     String name = req.getParameter("name");
-                    boolean check = CustomerDao.updateProfile(name, email, phone, customer_id);
+                    String dob = req.getParameter("dob");
+                    boolean check = CustomerDao.updateProfile(name, email, phone, dob, customer_id);
                     if (check){
                         req.getSession().setAttribute("mess", "success|Cập nhật thành công");
                         resp.sendRedirect(req.getContextPath() + "/customer/profile");

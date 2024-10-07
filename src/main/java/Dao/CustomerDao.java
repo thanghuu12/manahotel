@@ -5,6 +5,7 @@ import Model.Customer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class CustomerDao {
 
@@ -141,8 +142,8 @@ public class CustomerDao {
         return DBContext.executeUpdate("update customers set avatar = ? where id = ?", new String[]{avatar, id});
     }
 
-    public static boolean updateProfile(String name, String email, String phone, String id) {
-        return DBContext.executeUpdate("update customers set name = ?, email = ?, phone = ? where id = ?", new String[]{name, email, phone, id});
+    public static boolean updateProfile(String name, String email, String phone, String dob, String id) {
+        return DBContext.executeUpdate("update customers set name = ?, email = ?, phone = ?, dob = ? where id = ?", new String[]{name, email, phone, dob, id});
     }
     public static boolean updateTokenForgotPassword(String token, String email){
         return DBContext.executeUpdate("update customers set token = ? where email = ?", new String[]{token, email});
@@ -150,4 +151,31 @@ public class CustomerDao {
     public static boolean resetPassword(String password, String token){
         return DBContext.executeUpdate("update customers set password = ?, token = null where token = ?", new String[]{password, token});
     }
+    public static ArrayList<Customer> getAllCustomers(){
+        try {
+            Connection connection = DBContext.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from customers");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Customer> customers = new ArrayList<>();
+            while (resultSet.next()){
+                customers.add(new Customer(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("phone"),
+                    resultSet.getDate("dob"),
+                    resultSet.getString("avatar"),
+                    resultSet.getString("password"),
+                    resultSet.getBoolean("is_verified"),
+                    resultSet.getString("token"),
+                    resultSet.getTimestamp("created_at")
+                ));
+            }
+            return customers;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
-<%@include file="../master/head.jsp" %>
+<%@include file="../master/head.jsp"%>
 <body>
 <!-- ======= Header ======= -->
-<%@include file="../master/header.jsp" %>
+<%@include file="../master/header.jsp"%>
 <!-- End Header -->
 <!-- ======= Sidebar ======= -->
-<%@include file="../master/sidebar.jsp" %>
+<%@include file="../master/sidebar.jsp"%>
 <!-- End Sidebar-->
 <main id="main" class="main">
     <div class="pagetitle">
@@ -20,16 +20,19 @@
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
+        <div class="row">
+
+        </div>
     </section>
 
 </main>
 <!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<%@include file="../master/footer.jsp" %>
+<%@include file="../master/footer.jsp"%>
 <!-- End Footer -->
 
-<%@include file="../master/js.jsp" %>
+<%@include file="../master/js.jsp"%>
 
 </body>
 

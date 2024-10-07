@@ -12,6 +12,7 @@ public class Customer {
     public String password;
     public boolean is_verified;
     public String token;
+    public Date created_at;
 
     public Customer(int id, String email, String password, boolean is_verified) {
         this.id = id;
@@ -41,5 +42,34 @@ public class Customer {
         this.password = password;
         this.is_verified = is_verified;
         this.token = token;
+    }
+
+    public Customer(int id, String name, String email, String phone, Date dob, String avatar, String password, boolean is_verified, String token, Date created_at) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.dob = dob;
+        this.avatar = avatar;
+        this.password = password;
+        this.is_verified = is_verified;
+        this.token = token;
+        this.created_at = created_at;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dob=" + dob +
+                ", avatar='" + avatar + '\'' +
+                ", password='" + password + '\'' +
+                ", is_verified=" + is_verified +
+                ", token='" + token + '\'' +
+                ", created_at=" + created_at +
+                '}';
     }
 }
