@@ -40,54 +40,63 @@ public class HotelDao {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from hotels");
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<Hotel> hotels = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 hotels.add(new Hotel(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
                         resultSet.getString("email"),
                         resultSet.getString("avatar"),
+                        resultSet.getString("address"),
+                        resultSet.getString("gg_map_link"),
                         resultSet.getString("password"),
                         resultSet.getTimestamp("created_at")
                 ));
             }
             return hotels;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public static boolean createNewHotel(String name, String email, String avatar, String password){
-        return DBContext.executeUpdate("insert into hotels(name, email, avatar, password) values (?, ?, ?, ?)", new String[]{name, email, avatar, BCrypt.hashpw(password, BCrypt.gensalt())});
+
+    public static boolean createNewHotel(String name, String email, String avatar, String password, String address, String gg_map_link) {
+        return DBContext.executeUpdate("insert into hotels(name, email, avatar, password, address, gg_map_link) values (?, ?, ?, ?, ?, ?)", new String[]{name, email, avatar, BCrypt.hashpw(password, BCrypt.gensalt()), address, gg_map_link});
     }
-    public static Hotel getHotelWithId(int id){
+
+    public static Hotel getHotelWithId(int id) {
         try {
             Connection connection = DBContext.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from hotels where id = ?");
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 return new Hotel(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("email"),
-                    resultSet.getString("avatar"),
-                    resultSet.getString("password"),
-                    resultSet.getTimestamp("created_at")
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("avatar"),
+                        resultSet.getString("address"),
+                        resultSet.getString("gg_map_link"),
+                        resultSet.getString("password"),
+                        resultSet.getTimestamp("created_at")
                 );
             }
             return null;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public static boolean updateHotelProfile(String name, String email, String id){
-        return DBContext.executeUpdate("update hotels set name = ?, email = ? where id = ?", new String[]{name, email, id});
+
+    public static boolean updateHotelProfile(String name, String email, String id, String address, String gg_map_link) {
+        return DBContext.executeUpdate("update hotels set name = ?, email = ?, address = ?, gg_map_link = ? where id = ?", new String[]{name, email, address, gg_map_link, id});
     }
-    public static boolean updatePassword(String password, String id){
+
+    public static boolean updatePassword(String password, String id) {
         return DBContext.executeUpdate("update hotels set password = ? where id = ?", new String[]{BCrypt.hashpw(password, BCrypt.gensalt()), id});
     }
-    public static boolean updateAvatar(String avatar, String id){
+
+    public static boolean updateAvatar(String avatar, String id) {
         return DBContext.executeUpdate("update hotels set avatar = ? where id = ?", new String[]{avatar, id});
     }
 }

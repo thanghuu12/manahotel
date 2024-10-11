@@ -33,7 +33,7 @@
                     <th>Ảnh đại diện</th>
                     <th>Tình trạng xác thực</th>
                     <th>Đăng kí lúc</th>
-                    <th>Action</th>
+<%--                    <th>Action</th>--%>
                 </tr>
                 </thead>
                 <tbody>
@@ -45,9 +45,9 @@
                     <td><%=customers.get(i).email%></td>
                     <td><%=customers.get(i).phone%></td>
                     <td><a href="<%=customers.get(i).avatar.startsWith("http") || customers.get(i).avatar.startsWith("https") ? customers.get(i).avatar : request.getContextPath() + "/" + customers.get(i).avatar%>">Xem ảnh</a></td>
-                    <td><%=customers.get(i).is_verified%></td>
+                    <td><%=customers.get(i).is_verified ? "<span style='color: green'>Đã xác thực</span>" : "<span style='color: red'>Chưa xác thực</span>"%></td>
                     <td><%=customers.get(i).created_at%></td>
-                    <td>
+                    <%--<td>
                         <div class="row">
                             <div class="col-6">
                                 <button class="btn btn-success">AAAAAAA</button>
@@ -56,7 +56,7 @@
                                 <button class="btn btn-success">BBBBBBB</button>
                             </div>
                         </div>
-                    </td>
+                    </td>--%>
                 </tr>
                 <% } %>
                 </tbody>

@@ -57,6 +57,22 @@
                             </div>
 
                             <div class="col-12">
+                                <label for="address" class="form-label">Địa chỉ</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" name="address" class="form-control" id="address" required>
+                                    <div class="invalid-feedback">Please enter your address.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="gg_map_link" class="form-label">Nhúng bản đồ (bắt đầu bằng &lt;iframe)</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" name="gg_map_link" class="form-control" id="gg_map_link" required>
+                                    <div class="invalid-feedback">Please enter your gg_map_link.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
                                 <label for="avatar" class="form-label">Ảnh</label>
                                 <input type="file" name="avatar" class="form-control" id="avatar" required>
                                 <div class="invalid-feedback">Please choose your image!</div>
@@ -78,9 +94,11 @@
                     <th>ID</th>
                     <th>Tên</th>
                     <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th>Nhúng bản đồ</th>
                     <th>Ảnh đại diện</th>
                     <th>Tạo lúc</th>
-                    <th>Action</th>
+                    <%--<th>Action</th>--%>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,9 +108,11 @@
                     <td><%=hotels.get(i).id%></td>
                     <td><%=hotels.get(i).name%></td>
                     <td><%=hotels.get(i).email%></td>
+                    <td><%=hotels.get(i).address%></td>
+                    <td><%=hotels.get(i).gg_map_link%></td>
                     <td><a href="<%=hotels.get(i).avatar.startsWith("http") || hotels.get(i).avatar.startsWith("https") ? hotels.get(i).avatar : request.getContextPath() + "/" + hotels.get(i).avatar%>">Xem ảnh</a></td>
                     <td><%=hotels.get(i).created_at%></td>
-                    <td>
+                    <%--<td>
                         <div class="row">
                             <div class="col-6">
                                 <button class="btn btn-success">AAAAAAA</button>
@@ -101,7 +121,7 @@
                                 <button class="btn btn-success">BBBBBBB</button>
                             </div>
                         </div>
-                    </td>
+                    </td>--%>
                 </tr>
                 <% } %>
                 </tbody>

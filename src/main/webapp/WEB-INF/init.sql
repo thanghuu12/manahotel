@@ -1,63 +1,104 @@
+drop table IF EXISTS reviews;
+drop table IF EXISTS orders;
+drop table IF EXISTS payments;
+drop table IF EXISTS room_has_image;
+drop table IF EXISTS rooms;
+drop table IF EXISTS utilities;
+drop table IF EXISTS room_types;
+drop table IF EXISTS images;
+drop table IF EXISTS hotels;
+drop table IF EXISTS admins;
+drop table IF EXISTS customers;
 create table customers
 (
     id          int primary key identity,
-    name        nvarchar(max),
-    email       nvarchar(max),
-    phone       nvarchar(max),
+    name        nvarchar( max),
+    email       nvarchar( max),
+    phone       nvarchar( max),
     dob         date,
-    avatar      nvarchar(max),
-    password    nvarchar(max),
+    avatar      nvarchar( max),
+    password    nvarchar( max),
     is_verified bit,
-    token       nvarchar(max),
+    token       nvarchar( max),
     created_at  datetime default current_timestamp,
 );
+insert into customers(name, email, phone, dob, avatar, password, is_verified)
+values (N'Khách hàng', 'customer@gmail.com', '0123456789', '2002-08-05', 'assets/img/profile-img.jpg',
+        '$2a$10$ldHKnLQQLDUy./8cXjzRhOwJ4VEwpDba77KD5otpxbflZivA7YFkW', 'true')
 create table admins
 (
     id         int primary key identity,
-    name       nvarchar(max),
-    username   nvarchar(max),
-    avatar     nvarchar(max),
-    password   nvarchar(max),
+    name       nvarchar( max),
+    username   nvarchar( max),
+    avatar     nvarchar( max),
+    password   nvarchar( max),
     created_at datetime default current_timestamp,
 );
 insert into admins(name, username, password, avatar)
-values (N'Admin đây :))', 'admin', '$2a$10$90GZEeepyVAEO93J0CO5Qu8A8.1p4N7ru1v14JBfFSHTM4Cxpwusa', 'assets/img/admin-avatar.jpg') -- password : Admin12345
+values (N'Admin đây :))', 'admin', '$2a$10$90GZEeepyVAEO93J0CO5Qu8A8.1p4N7ru1v14JBfFSHTM4Cxpwusa',
+        'assets/img/admin-avatar.jpg') -- password : Admin12345
 create table hotels
 (
-    id         int primary key identity,
-    name       nvarchar(max),
-    email      nvarchar(max),
-    avatar     nvarchar(max),
-    password   nvarchar(max),
-    created_at datetime default current_timestamp,
+    id          int primary key identity,
+    name        nvarchar( max),
+    email       nvarchar( max),
+    address     nvarchar( max),
+    gg_map_link nvarchar( max),
+    avatar      nvarchar( max),
+    password    nvarchar( max),
+    created_at  datetime default current_timestamp,
 );
+insert into hotels(name, email, address, gg_map_link, avatar, password)
+values ('Novotel', 'novotel@gmail.com', N'36 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng',
+        '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15335.072189020671!2d108.2237843!3d16.077522!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142183afab4a42d%3A0xd52dbe9e28e83835!2zS2jDoWNoIHPhuqFuIE5vdm90ZWwgxJDDoCBO4bq1bmc!5e0!3m2!1svi!2s!4v1728454675497!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+        'assets/uploads/novotel.jpg', '$2a$10$ldHKnLQQLDUy./8cXjzRhOwJ4VEwpDba77KD5otpxbflZivA7YFkW') -- password:123456
 create table room_types
 (
     id          int primary key identity,
     hotel_id    int foreign key references hotels (id),
-    name        nvarchar(max),
-    description nvarchar(max),
+    name        nvarchar( max),
+    description nvarchar( max),
 );
+
 create table utilities
 (
-    id int primary key identity,
-    name nvarchar(max),
+    id   int primary key identity,
+    name nvarchar( max),
 );
+insert into utilities(name)
+values ('free wifi');
+insert into utilities(name)
+values (N'nhà hàng');
+insert into utilities(name)
+values (N'bữa sáng miễn phí');
+insert into utilities(name)
+values (N'xe đưa đón sân bay');
+insert into utilities(name)
+values (N'gần biển');
+insert into utilities(name)
+values (N'gần trung tâm');
+
 create table rooms
 (
     id           int primary key identity,
-    number       int,
-    name         nvarchar(max),
+    number       nvarchar( max),
     room_type_id int foreign key references room_types (id),
-    utility_id int foreign key references utilities (id),
+    beds int,
+    area float,
     price        int,
     is_available bit,
+);
+create table room_has_utilities
+(
+    id int primary key identity,
+    utility_id   int foreign key references utilities (id),
+    room_id int foreign key references rooms(id)
 );
 create table images
 (
     id         int primary key identity,
     hotel_id   int foreign key references hotels (id),
-    url      nvarchar(max),
+    url        nvarchar( max),
     created_at datetime default current_timestamp,
 );
 create table room_has_image
@@ -70,13 +111,13 @@ create table payments
 (
     id                int primary key identity,
     amount            int,
-    txnRef            nvarchar(max),
-    orderInfo         nvarchar(max),
-    bankCode          nvarchar(max),
-    transactionNo     nvarchar(max),
-    transactionStatus nvarchar(max),
-    cardType          nvarchar(max),
-    bankTranNo        nvarchar(max),
+    txnRef            nvarchar( max),
+    orderInfo         nvarchar( max),
+    bankCode          nvarchar( max),
+    transactionNo     nvarchar( max),
+    transactionStatus nvarchar( max),
+    cardType          nvarchar( max),
+    bankTranNo        nvarchar( max),
     created_at        datetime default current_timestamp,
     paid_at           datetime,
 );
@@ -99,18 +140,7 @@ create table reviews
     customer_id int foreign key references customers (id),
     order_id    int foreign key references orders (id),
     rating      int check (rating between 1 and 5),
-    comment     nvarchar(max),
+    comment     nvarchar( max),
     created_at  datetime default current_timestamp
 );
--- use this to drop all tables
-/*drop table reviews;
-drop table orders;
-drop table payments;
-drop table room_has_image;
-drop table rooms;
-drop table utilities;
-drop table room_types;
-drop table images;
-drop table hotels;
-drop table admins;
-drop table customers;*/
+-- 123456:$2a$10$ldHKnLQQLDUy./8cXjzRhOwJ4VEwpDba77KD5otpxbflZivA7YFkW

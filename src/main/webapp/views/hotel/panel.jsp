@@ -25,6 +25,12 @@
                 <button class="col-6 m-1 btn btn-success">Quản lý loại phòng</button>
             </a>
         </div>
+
+        <div class="row">
+            <a href="<%=request.getContextPath()%>/hotel/manage-room">
+                <button class="col-6 m-1 btn btn-success">Quản lý phòng</button>
+            </a>
+        </div>
     </section>
 
 </main>

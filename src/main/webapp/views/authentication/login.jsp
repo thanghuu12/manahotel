@@ -54,7 +54,9 @@
                                     </a>
                                     <div class="col-12">
                                         <p class="small mb-0">Don't have account? <a href="<%=request.getContextPath()%>/register">Đăng kí</a></p>
-                                        <a href="<%=request.getContextPath()%>/forgot-password">Bạn quên mật khẩu?</a>
+                                        <a href="<%=request.getContextPath()%>/forgot-password">Bạn quên mật khẩu?</a><br>
+                                        <a href="<%=request.getContextPath()%>/hotel/login">Đăng nhâp khách sạn</a><br>
+                                        <a href="<%=request.getContextPath()%>/admin/login">Đăng nhập quản trị viên</a>
                                     </div>
                                 </form>
 

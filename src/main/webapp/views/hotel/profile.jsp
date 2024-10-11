@@ -1,3 +1,4 @@
+<%@ page import="Util.EscapeCharacters" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,14 +87,30 @@
                                     <div class="row mb-3">
                                         <label for="name" class="col-md-4 col-lg-3 col-form-label">Tên</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="name" type="text" class="form-control" id="name" value="<%=hotel.name%>">
+                                            <input name="name" type="text" class="form-control" id="name" value="<%=hotel.name%>" required>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="email" type="email" class="form-control" id="email" value="<%=hotel.email%>">
+                                            <input name="email" type="email" class="form-control" id="email" value="<%=hotel.email%>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="address" class="form-label">Địa chỉ</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" name="address" class="form-control" id="address" value="<%=hotel.address%>" required>
+                                            <div class="invalid-feedback">Please enter your address.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="gg_map_link" class="form-label">Nhúng bản đồ (bắt đầu bằng &lt;iframe)</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" name="gg_map_link" class="form-control" id="gg_map_link" value='<%=hotel.gg_map_link%>' required>
+                                            <div class="invalid-feedback">Please enter your gg_map_link.</div>
                                         </div>
                                     </div>
 

@@ -25,8 +25,10 @@ public class HotelController {
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             String name = req.getParameter("name");
             String email = req.getParameter("email");
+            String address = req.getParameter("address");
+            String gg_map_link = req.getParameter("gg_map_link");
             String hotel_id = req.getSession().getAttribute("hotel").toString();
-            if (HotelDao.updateHotelProfile(name, email, hotel_id)){
+            if (HotelDao.updateHotelProfile(name, email, hotel_id, address, gg_map_link)){
                 req.getSession().setAttribute("mess", "success|Cập nhật thành công");
                 resp.sendRedirect(req.getContextPath() + "/hotel/profile");
             } else {

@@ -105,10 +105,12 @@ public class AdminController {
             String name = req.getParameter("name");
             String email = req.getParameter("email");
             String password = req.getParameter("password");
+            String address = req.getParameter("address");
+            String gg_map_link = req.getParameter("gg_map_link");
             String newFileName = UploadImage.saveImage(req, "avatar");
-            if (HotelDao.createNewHotel(name, email, newFileName, password)){
+            if (HotelDao.createNewHotel(name, email, newFileName, password, address, gg_map_link)){
                 req.getSession().setAttribute("mess", "success|Thêm mới hotel thành công.");
-                resp.sendRedirect(req.getContextPath() + "/admin");
+                resp.sendRedirect(req.getContextPath() + "/admin/hotel-control");
             } else {
                 req.getSession().setAttribute("mess", "error|Đã có lỗi xảy ra.");
                 resp.sendRedirect(req.getContextPath() + "/admin/hotel-control");

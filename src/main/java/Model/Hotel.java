@@ -7,6 +7,8 @@ public class Hotel {
     public String name;
     public String email;
     public String avatar;
+    public String address;
+    public String gg_map_link;
     public String password;
     public Date created_at;
 
@@ -15,6 +17,17 @@ public class Hotel {
         this.name = name;
         this.email = email;
         this.avatar = avatar;
+        this.password = password;
+        this.created_at = created_at;
+    }
+
+    public Hotel(int id, String name, String email, String avatar, String address, String gg_map_link, String password, Date created_at) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.avatar = avatar;
+        this.address = address;
+        this.gg_map_link = gg_map_link;
         this.password = password;
         this.created_at = created_at;
     }

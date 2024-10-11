@@ -31,7 +31,7 @@
                 <button class="col-6 m-1 btn btn-success">Quản lý khách sạn</button>
             </a>
             <a href="<%=request.getContextPath()%>/admin/manage-utility">
-                <button class="col-6 m-1 btn btn-success">Quản lý tiên ích</button>
+                <button class="col-6 m-1 btn btn-success">Quản lý tiện ích</button>
             </a>
         </div>
     </section>
