@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class UploadImage {
@@ -63,5 +64,22 @@ public class UploadImage {
         }
 
         return content.toString();
+    }
+    public static ArrayList<String> multipleFileUpload(HttpServletRequest req, String fieldName) throws ServletException, IOException {
+        ArrayList<String> fileNames = new ArrayList<>();
+        for (Part part : req.getParts()){
+            if (part.getName().equals(fieldName) && part.getSize() != 0){
+                String originFileName = part.getSubmittedFileName();
+                String newFileName = generateUniqueFileName(originFileName);
+                String uploadDir = req.getServletContext().getRealPath("/") + "assets/uploads";
+                Path filePath = Paths.get(uploadDir, newFileName);
+                try (InputStream fileContent = part.getInputStream()) {
+                    Files.copy(fileContent, filePath, StandardCopyOption.REPLACE_EXISTING);
+                }
+                newFileName = "assets/uploads/" + newFileName;
+                fileNames.add(newFileName);
+            }
+        }
+        return fileNames;
     }
 }

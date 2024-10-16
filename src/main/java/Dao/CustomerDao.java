@@ -20,7 +20,6 @@ public class CustomerDao {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -37,7 +36,6 @@ public class CustomerDao {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }

@@ -1,14 +1,15 @@
-drop table IF EXISTS reviews;
-drop table IF EXISTS orders;
-drop table IF EXISTS payments;
-drop table IF EXISTS room_has_image;
-drop table IF EXISTS rooms;
-drop table IF EXISTS utilities;
-drop table IF EXISTS room_types;
-drop table IF EXISTS images;
-drop table IF EXISTS hotels;
-drop table IF EXISTS admins;
-drop table IF EXISTS customers;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS room_has_images;
+DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS room_has_utilities;
+DROP TABLE IF EXISTS rooms;
+DROP TABLE IF EXISTS utilities;
+DROP TABLE IF EXISTS room_types;
+DROP TABLE IF EXISTS hotels;
+DROP TABLE IF EXISTS admins;
+DROP TABLE IF EXISTS customers;
 create table customers
 (
     id          int primary key identity,
@@ -81,6 +82,7 @@ values (N'gần trung tâm');
 create table rooms
 (
     id           int primary key identity,
+    hotel_id     int foreign key references hotels(id),
     number       nvarchar( max),
     room_type_id int foreign key references room_types (id),
     beds int,
@@ -97,11 +99,9 @@ create table room_has_utilities
 create table images
 (
     id         int primary key identity,
-    hotel_id   int foreign key references hotels (id),
     url        nvarchar( max),
-    created_at datetime default current_timestamp,
 );
-create table room_has_image
+create table room_has_images
 (
     id       int primary key identity,
     room_id  int foreign key references rooms (id),

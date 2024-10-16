@@ -1,11 +1,10 @@
 package Dao;
 
 import Util.Config;
+import org.checkerframework.checker.units.qual.A;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DBContext {
     public static Connection getConnection(){
@@ -40,7 +39,48 @@ public class DBContext {
         }
     }
 
+    public static int insertGetLastId(String sql, String[] fields){
+        Connection connection = getConnection();
+        try {
+            assert connection != null;
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < fields.length; i++) {
+                preparedStatement.setString(i + 1, fields[i]);
+            }
+            preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()){
+                return (int) generatedKeys.getLong(1);
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    public static ArrayList<Integer> insertGetLastIds(String sql, String[] fields){
+        Connection connection = getConnection();
+        ArrayList<Integer> ids = new ArrayList<>();
+        try {
+            assert connection != null;
+
+            for (String field : fields) {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, field);
+                preparedStatement.executeUpdate();
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    ids.add((int) generatedKeys.getLong(1));
+                }
+                preparedStatement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
+
     public static void main(String[] args) throws SQLException {
-        System.out.println(getConnection().getCatalog());
     }
 }

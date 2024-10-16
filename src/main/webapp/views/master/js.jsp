@@ -14,6 +14,7 @@
 <!-- Template Main JS File -->
 <script src="<%=request.getContextPath()%>/assets/js/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
 <script>
     const mess_error = "${error}"
     const mess_success = "${success}"
@@ -31,4 +32,7 @@
     if (info !== ""){
         toastr.info(info, "Thông tin")
     }
+    $(".modal").on('shown.bs.modal', function () {
+        $(".reload_chosen").chosen('destroy').chosen();
+    });
 </script>
