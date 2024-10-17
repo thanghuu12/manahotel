@@ -274,7 +274,6 @@ public class RoomTypeDao {
             for (int i = 0; i < params.size(); i++) {
                 preparedStatement.setString(i + 1, params.get(i));
             }
-            System.out.println(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<RoomType> roomTypes = new ArrayList<>();
             while (resultSet.next()) {
