@@ -2,7 +2,11 @@ package Controller;
 
 import Dao.DBContext;
 import Dao.RoomDao;
+import Dao.RoomTypeDao;
+import Dao.UtilityDao;
 import Model.Room;
+import Model.RoomType;
+import Model.Utility;
 import Util.UploadImage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -94,26 +98,23 @@ public class HomeController {
 
         @WebServlet("/search")
         public static class Search extends HttpServlet {
-            /*
-            query
-            hotel_name
-            utility
-            price range
-
-            */
             @Override
             protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
                 String query = req.getParameter("query");
                 String[] utility_ids = req.getParameterValues("utility_ids");
                 String price_from = req.getParameter("price_from");
                 String price_to = req.getParameter("price_to");
-                if (query == null && utility_ids == null && price_from == null && price_to == null) {
-                    req.getRequestDispatcher("/views/public/search.jsp").forward(req, resp);
+                String sort = req.getParameter("sort");
+                ArrayList<Utility> utilities = UtilityDao.getAllUtilities();
+                req.setAttribute("utilities", utilities);
+                ArrayList<RoomType> roomTypes;
+                if (query == null && utility_ids == null && price_from == null && price_to == null && sort == null) {
+                    roomTypes = new ArrayList<>();
                 } else {
-                    ArrayList<Room> rooms = RoomDao.search(query, utility_ids, price_from, price_to);
-                    req.setAttribute("rooms", rooms);
-                    req.getRequestDispatcher("/views/public/search.jsp").forward(req, resp);
+                    roomTypes = RoomTypeDao.search(query, utility_ids, price_from, price_to, sort);
                 }
+                req.setAttribute("roomTypes", roomTypes);
+                req.getRequestDispatcher("/views/public/search.jsp").forward(req, resp);
             }
         }
     }

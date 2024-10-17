@@ -1,6 +1,9 @@
 package Dao;
 
 import Model.Image;
+import Model.Utility;
+import com.google.gson.Gson;
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,9 +26,7 @@ public class ImageDao {
             while (resultSet.next()){
                 images.add(new Image(
                         resultSet.getInt("id"),
-                        resultSet.getInt("hotel_id"),
-                        resultSet.getString("url"),
-                        resultSet.getTimestamp("created_at")
+                        resultSet.getString("url")
                 ));
             }
             return images;
@@ -33,11 +34,5 @@ public class ImageDao {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(addImage("1", "test url2"));
-        System.out.println(addImage("1", "test url3"));
-        System.out.println(addImage("1", "test url4"));
     }
 }

@@ -50,20 +50,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <label for="utilities" class="form-label">Tiện ích</label>
-                                <div class="input-group has-validation">
-                                    <select class="reload_chosen" style="width: 100%;" name="utility_ids"
-                                            id="utilities" multiple>
-                                        <% ArrayList<Utility> utilities = (ArrayList<Utility>) request.getAttribute("utilities");%>
-                                        <% for (int i = 0; i < utilities.size(); i++) { %>
-                                        <option value="<%=utilities.get(i).id%>"><%=utilities.get(i).name%>
-                                        </option>
-                                        <% } %>
-                                    </select>
-                                    <div class="invalid-feedback">Vui lòng chọn loại phòng</div>
-                                </div>
-                            </div>
                             <div class="col-12 row">
                                 <label>Số phòng</label>
                                 <div class="col-6">
@@ -81,38 +67,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label for="area" class="form-label">Diện tích phòng (m²)</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="area" class="form-control" id="area" required>
-                                    <div class="invalid-feedback">Vui lòng nhập diện tích phòng</div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <label for="beds" class="form-label">Số giường ngủ</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="beds" class="form-control" id="beds" required>
-                                    <div class="invalid-feedback">Vui lòng nhập số giường ngủ</div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="images" class="form-label">Ảnh</label>
-                                <div class="input-group has-validation">
-                                    <input type="file" accept="image/*" name="images" class="form-control" id="images"
-                                           required multiple>
-                                    <div class="invalid-feedback">Vui lòng nhập ảnh</div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="price" class="form-label">Giá phòng (vnd)</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="price" class="form-control" id="price" required>
-                                    <div class="invalid-feedback">Vui lòng nhập giá phòng</div>
-                                </div>
-                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -129,7 +84,7 @@
                         <h5 class="modal-title">Thêm mới loại phòng</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="<%=request.getContextPath()%>/hotel/update-room" method="post" enctype="multipart/form-data">
+                    <form action="<%=request.getContextPath()%>/hotel/update-room" method="post">
                         <input type="hidden" name="id" id="update_id">
                         <div class="modal-body">
                             <div class="col-12">
@@ -145,67 +100,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <label for="utilities_update" class="form-label">Tiện ích</label>
+                            <label>Số phòng</label>
+                            <div class="col-6">
+                                <label for="number" class="form-label">Số phòng</label>
                                 <div class="input-group has-validation">
-                                    <select class="reload_chosen" style="width: 100%;" name="utility_ids"
-                                            id="utilities_update" multiple>
-                                        <% for (int i = 0; i < utilities.size(); i++) { %>
-                                        <option value="<%=utilities.get(i).id%>"><%=utilities.get(i).name%>
-                                        </option>
-                                        <% } %>
-                                    </select>
-                                    <div class="invalid-feedback">Vui lòng chọn loại phòng</div>
-                                </div>
-                            </div>
-                            <div class="col-12 row">
-                                <label>Số phòng</label>
-                                <div class="input-group has-validation">
-                                    <input type="text" name="number" class="form-control" id="number" required>
+                                    <input type="number" name="number" class="form-control" id="number" required>
                                     <div class="invalid-feedback">Vui lòng nhập số phòng</div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <label for="area_update" class="form-label">Diện tích phòng (m²)</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="area" class="form-control" id="area_update"
-                                           required>
-                                    <div class="invalid-feedback">Vui lòng nhập diện tích phòng</div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="beds_update" class="form-label">Số giường ngủ</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="beds" class="form-control" id="beds_update"
-                                           required>
-                                    <div class="invalid-feedback">Vui lòng nhập số giường ngủ</div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="price_update" class="form-label">Giá phòng (vnd)</label>
-                                <div class="input-group has-validation">
-                                    <input type="number" min="0" name="price" class="form-control" id="price_update"
-                                           required>
-                                    <div class="invalid-feedback">Vui lòng nhập giá phòng</div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mt-1">
-                                <div class="row" id="preview_image">
-
-                                </div>
-                                <p class="text-danger" hidden id="number_images_delete"></p>
-                                <input type="hidden" name="images_to_delete" id="images_to_delete">
-                            </div>
-
-                            <div class="col-12">
-                                <label for="images_update" class="form-label">Ảnh</label>
-                                <div class="input-group has-validation">
-                                    <input type="file" accept="image/*" name="images" class="form-control"
-                                           id="images_update" multiple>
-                                    <div class="invalid-feedback">Vui lòng nhập ảnh</div>
                                 </div>
                             </div>
                         </div>
@@ -224,11 +124,7 @@
                     <th>ID</th>
                     <th>Số phòng</th>
                     <th>Loại phòng</th>
-                    <th>Giá (vnd)</th>
-                    <th>Số giường ngủ</th>
-                    <th>Diện tích (m²)</th>
                     <th>Khả dụng</th>
-                    <th>Tiện ích</th>
                     <th>Cập nhật</th>
                 </tr>
                 </thead>
@@ -242,12 +138,6 @@
                     </td>
                     <td><%=rooms.get(i).room_type_name%>
                     </td>
-                    <td><%=rooms.get(i).price%>
-                    </td>
-                    <td><%=rooms.get(i).beds%>
-                    </td>
-                    <td><%=rooms.get(i).area%>
-                    </td>
                     <td>
                         <% if (rooms.get(i).is_available) { %>
                         <a href='<%=request.getContextPath()%>/hotel/change-availability?id=<%=rooms.get(i).id%>'>
@@ -259,11 +149,9 @@
                         </a>
                         <% } %>
                     </td>
-                    <td class="col-4"><%=Arrays.toString(rooms.get(i).utility_names).replace("[", "").replace("]", "")%>
-                    </td>
                     <td>
-                        <button onclick="show_update_modal(<%=rooms.get(i).id%>, <%=rooms.get(i).room_type_id%>, '<%=Arrays.toString(rooms.get(i).utility_ids).replace("[", "").replace("]", "")%>', <%=rooms.get(i).number%>, <%=rooms.get(i).area%>, <%=rooms.get(i).beds%>, <%=rooms.get(i).price%>, '<%=Arrays.toString(rooms.get(i).image_ids).replace("[", "").replace("]", "")%>', '<%=Arrays.toString(rooms.get(i).image_urls).replace("[", "").replace("]", "")%>')"
-                                class="btn btn-warning" type="button" data-bs-toggle="modal"
+                        <button
+                                class="btn btn-warning" type="button" data-bs-toggle="modal" onclick="show_update_modal(<%=rooms.get(i).id%>, <%=rooms.get(i).room_type_id%>, <%=rooms.get(i).number%>)"
                                 data-bs-target="#update_modal">Cập nhật
                         </button>
                     </td>
@@ -284,45 +172,10 @@
 
 </body>
 <script>
-    $("#utilities").chosen();
-    let image_ids_to_delete = []
-
-    function show_update_modal(id, room_type_id, utility_ids, number, area, beds, price, image_ids, image_urls) {
-        image_ids_to_delete = []
-        let image_urls_arr = []
-        let image_ids_arr = []
+    function show_update_modal(id, room_type_id, number) {
         $("#update_id").val(id)
         $("#room_type_id_update").val(room_type_id)
-        $("#utilities_update").val(utility_ids.split(', ').map(item => parseInt(item.trim())))
         $("#number").val(number)
-        $("#area_update").val(area)
-        $("#beds_update").val(beds)
-        $("#price_update").val(price)
-        let html = '';
-        image_urls_arr = image_urls.split(', ').map(item => item.trim());
-        image_ids_arr = image_ids.split(', ').map(item => parseInt(item.trim()));
-        for (let i = 0; i < image_urls_arr.length; i++) {
-            html += `<div class="col-4">
-                        <img onclick="choose_image_to_delete(` + image_ids_arr[i] + `)" id="` + image_ids_arr[i] + `" src="<%=request.getContextPath()%>/` + image_urls_arr[i] + `" alt="" class="m-1 img-thumbnail" style="width: 100%; max-height: 300px; object-fit: cover">
-                    </div>`;
-        }
-        $("#preview_image").html(html)
-    }
-
-    function choose_image_to_delete(id) {
-        if (image_ids_to_delete.includes(id)){
-            image_ids_to_delete = image_ids_to_delete.filter(item => item !== id)
-            $("#" + id).removeClass("border-4 border-danger")
-        } else {
-            image_ids_to_delete.push(id)
-            $("#" + id).addClass("border-4 border-danger")
-        }
-        if (image_ids_to_delete.length === 0){
-            $("#number_images_delete").attr("hidden", "true")
-        } else {
-            $("#number_images_delete").removeAttr("hidden").text(image_ids_to_delete.length + " ảnh sẽ được xóa.")
-        }
-        $("#images_to_delete").val(image_ids_to_delete.join(','))
     }
 </script>
 </html>
