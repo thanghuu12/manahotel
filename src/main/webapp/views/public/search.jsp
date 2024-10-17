@@ -76,8 +76,8 @@
                                     <label for="sort" class="col-sm-3 col-form-label">Sắp xếp</label>
                                     <div class="col-sm-9">
                                         <select class="form-control" name="sort" id="sort">
-                                            <option <%=request.getParameter("sort").equals("1") ? "selected" : ""%> value="1">Giá tăng dần</option>
-                                            <option <%=request.getParameter("sort").equals("2") ? "selected" : ""%> value="2">Giá giảm dần</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("1") ? "selected" : ""%> value="1">Giá tăng dần</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("2") ? "selected" : ""%> value="2">Giá giảm dần</option>
                                         </select>
                                     </div>
                                 </div>
