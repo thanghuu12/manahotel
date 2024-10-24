@@ -16,4 +16,12 @@ public class Room {
         this.room_type_name = room_type_name;
         this.is_available = is_available;
     }
+
+    public Room(int id, int hotel_id, String number, int room_type_id, boolean is_available) {
+        this.id = id;
+        this.hotel_id = hotel_id;
+        this.number = number;
+        this.room_type_id = room_type_id;
+        this.is_available = is_available;
+    }
 }

@@ -1,8 +1,8 @@
 package Controller;
 
-import Dao.DBContext;
-import Dao.RoomTypeDao;
-import Dao.UtilityDao;
+import Dao.*;
+import Model.Hotel;
+import Model.Room;
 import Model.RoomType;
 import Model.Utility;
 import Util.UploadImage;
@@ -77,6 +77,24 @@ public class RoomTypeController {
                 req.getSession().setAttribute("mess", "error|Lỗi hệ thống");
             }
             resp.sendRedirect(req.getContextPath() + "/hotel/manage-room-type");
+        }
+    }
+    @WebServlet("/room-type")
+    public static class ViewRoomType extends HttpServlet{
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String id = req.getParameter("id");
+            RoomType roomType = RoomTypeDao.getRoomTypeWithId(id);
+            req.setAttribute("roomType", roomType);
+            Hotel hotel = HotelDao.getHotelWithId(roomType.hotel_id);
+            req.setAttribute("hotel", hotel);
+            if (req.getParameter("from_date") != null && req.getParameter("to_date") != null) {
+                String from_date = req.getParameter("from_date");
+                String to_date = req.getParameter("to_date");
+                ArrayList<Room> rooms = RoomDao.getAvailableRoom(from_date, to_date, id);
+                req.setAttribute("rooms", rooms);
+            }
+            req.getRequestDispatcher("/views/public/room-type.jsp").forward(req, resp);
         }
     }
 }

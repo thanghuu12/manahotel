@@ -296,4 +296,64 @@ public class RoomTypeDao {
             return new ArrayList<>();
         }
     }
+    public static RoomType getRoomTypeWithId(String id){
+        try {
+            Connection connection = DBContext.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("WITH UtilityAggregates AS (\n" +
+                    "    SELECT\n" +
+                    "        rt.id AS room_type_id,\n" +
+                    "        STRING_AGG(CAST(u.id AS NVARCHAR), ',') AS utility_ids,\n" +
+                    "        STRING_AGG(u.name, ',') AS utility_names\n" +
+                    "    FROM room_types rt\n" +
+                    "    LEFT JOIN room_types_has_utilities rtu ON rt.id = rtu.room_type_id\n" +
+                    "    LEFT JOIN utilities u ON rtu.utility_id = u.id\n" +
+                    "    GROUP BY rt.id\n" +
+                    "),\n" +
+                    "ImageAggregates AS (\n" +
+                    "    SELECT\n" +
+                    "        rt.id AS room_type_id,\n" +
+                    "        STRING_AGG(CAST(i.id AS NVARCHAR), ',') AS image_ids,\n" +
+                    "        STRING_AGG(i.url, ',') AS image_urls\n" +
+                    "    FROM room_types rt\n" +
+                    "    LEFT JOIN room_type_has_images rti ON rt.id = rti.room_type_id\n" +
+                    "    LEFT JOIN images i ON rti.image_id = i.id\n" +
+                    "    GROUP BY rt.id\n" +
+                    ")\n" +
+                    "SELECT\n" +
+                    "    rt.id AS room_type_id,\n" +
+                    "   rt.hotel_id AS hotel_id,\n" +
+                    "    rt.name AS room_type_name,\n" +
+                    "    rt.description AS room_type_description,\n" +
+                    "    rt.beds,\n" +
+                    "    rt.area,\n" +
+                    "    rt.price,\n" +
+                    "    ua.utility_ids,\n" +
+                    "    ua.utility_names,\n" +
+                    "    ia.image_ids,\n" +
+                    "    ia.image_urls\n" +
+                    "FROM room_types rt\n" +
+                    "         LEFT JOIN UtilityAggregates ua ON rt.id = ua.room_type_id\n" +
+                    "         LEFT JOIN ImageAggregates ia ON rt.id = ia.room_type_id\n" +
+                    "where rt.id = ?;");
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                 return new RoomType(
+                        resultSet.getInt("room_type_id"),
+                        resultSet.getInt("hotel_id"),
+                        resultSet.getString("room_type_name"),
+                        resultSet.getString("room_type_description"),
+                        resultSet.getInt("beds"),
+                        resultSet.getFloat("area"),
+                        resultSet.getInt("price"),
+                        convert2Utility(resultSet.getString("utility_ids"), resultSet.getString("utility_names")),
+                        convert2Image(resultSet.getString("image_ids"), resultSet.getString("image_urls"))
+                );
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

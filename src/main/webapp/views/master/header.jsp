@@ -49,21 +49,21 @@
                         name = customer.name;
                         email = customer.email;
                         avatar = customer.avatar;
-                        profile_link = request.getContextPath() + "/" + "customer/profile";
+                        profile_link = request.getContextPath() + "/customer/profile";
                     } else if (admin_id != null) {
                         admin = AdminDao.getAdminWithId(Integer.parseInt(admin_id));
                         assert admin != null;
                         name = admin.name;
                         email = admin.username;
                         avatar = admin.avatar;
-                        profile_link = request.getContextPath() + "/" + "admin/profile";
+                        profile_link = request.getContextPath() + "/admin/admin-control?admin_id_side_bar=" + admin.id;
                     } else if (hotel_id != null) {
                         hotel = HotelDao.getHotelWithId(Integer.parseInt(hotel_id));
                         assert hotel != null;
                         name = hotel.name;
                         email = hotel.email;
                         avatar = hotel.avatar;
-                        profile_link = request.getContextPath() + "/" + "hotel/profile";
+                        profile_link = request.getContextPath() + "/hotel/profile";
                     }
                 %>
                 <% if (customer_id != null || admin != null || hotel != null) { %>

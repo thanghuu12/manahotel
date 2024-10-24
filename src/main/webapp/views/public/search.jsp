@@ -105,7 +105,9 @@
                             <p class="card-text"><%=roomTypes.get(i).price%>(vnd)</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button onclick="toastr.success('Sắp cập nhật')" type="button" class="btn btn-outline-secondary">Xem chi tiết</button>
+                                    <a href="<%=request.getContextPath()%>/room-type?id=<%=roomTypes.get(i).id%>">
+                                        <button type="button" class="btn btn-outline-secondary">Xem chi tiết</button>
+                                    </a>
                                 </div>
                                 <small class="text-muted">9 mins</small>
                             </div>

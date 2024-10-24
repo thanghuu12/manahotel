@@ -20,7 +20,8 @@
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
-        <div class="col-12">
+        <div class="row">
+
         </div>
     </section>
 

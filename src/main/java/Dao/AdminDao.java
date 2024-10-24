@@ -9,14 +9,14 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class AdminDao {
-    public static Admin adminLogin(String username, String password){
+    public static Admin adminLogin(String username, String password) {
         try {
             Connection connection = DBContext.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from admins where username = ?");
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                if (BCrypt.checkpw(password, resultSet.getString("password"))){
+                if (BCrypt.checkpw(password, resultSet.getString("password"))) {
                     return new Admin(
                             resultSet.getInt("id"),
                             resultSet.getString("username"),
@@ -25,21 +25,23 @@ public class AdminDao {
                 }
             }
             return null;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public static boolean createAdmin(String name ,String username, String password){
+
+    public static boolean createAdmin(String name, String username, String password) {
         return DBContext.executeUpdate("insert into admins(name, username, password, avatar) values(?, ?, ?, 'assets/img/admin-avatar.jpg')", new String[]{name, username, BCrypt.hashpw(password, BCrypt.gensalt())});
     }
-    public static ArrayList<Admin> getAllAdmins(){
+
+    public static ArrayList<Admin> getAllAdmins() {
         try {
             Connection connection = DBContext.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from admins");
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<Admin> admins = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 admins.add(new Admin(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
@@ -49,12 +51,13 @@ public class AdminDao {
                 ));
             }
             return admins;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public static Admin getAdminWithId(int id){
+
+    public static Admin getAdminWithId(int id) {
         try {
             Connection connection = DBContext.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from admins where id = ?");
@@ -70,9 +73,17 @@ public class AdminDao {
                 );
             }
             return null;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static boolean updateAdmin(String id, String name, String username, String password) {
+        if (password != null && !password.isEmpty()) {
+            return DBContext.executeUpdate("update admins set name = ?, username = ?, password = ? where id = ?", new String[]{name, username, BCrypt.hashpw(password, BCrypt.gensalt()), id});
+        } else {
+            return DBContext.executeUpdate("update admins set name = ?, username = ? where id = ?", new String[]{name, username, id});
         }
     }
 }

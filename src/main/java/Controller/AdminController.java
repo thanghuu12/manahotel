@@ -56,13 +56,16 @@ public class AdminController {
     public static class createAdmin extends HttpServlet{
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+            String id = req.getParameter("id");
             String name = req.getParameter("name");
             String username = req.getParameter("username");
             String password = req.getParameter("password");
-            if (AdminDao.createAdmin(name, username, password)){
+            if (AdminDao.updateAdmin(id, name, username, password)){
                 req.getSession().setAttribute("mess", "success|Tạo admin mới thành công.");
-                resp.sendRedirect(req.getContextPath() + "/admin/admin-control");
+            } else {
+                req.getSession().setAttribute("mess", "error|Lỗi hệ thống.");
             }
+            resp.sendRedirect(req.getContextPath() + "/admin/admin-control");
         }
     }
 

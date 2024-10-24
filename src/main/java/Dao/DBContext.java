@@ -6,6 +6,7 @@ import org.checkerframework.checker.units.qual.A;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class DBContext {
     public static Connection getConnection(){
@@ -83,7 +84,6 @@ public class DBContext {
     }
 
     public static void main(String[] args) throws SQLException {
-        String[] a = new String[]{};
-        System.out.println(Arrays.toString(a));
+        System.out.println(Objects.requireNonNull(getConnection()).getCatalog());
     }
 }
