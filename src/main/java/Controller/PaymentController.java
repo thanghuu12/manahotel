@@ -19,14 +19,22 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class PaymentController {
     @WebServlet("/customer/get-vnpay-url")
     public static class GetVNPayUrlServlet extends HttpServlet {
+        public static int countDays(Date from_date, Date to_date) {
+            LocalDate startDate = from_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endDate = to_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+            return (int) daysBetween;
+        }
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            String customer_id = req.getSession().getAttribute("customer").toString();
             String booking_id = req.getParameter("booking_id");
             Booking booking = BookingDao.getBookingWithId(booking_id);
             if (booking == null) {
@@ -37,7 +45,7 @@ public class PaymentController {
                     String vnp_Version = "2.1.0";
                     String vnp_Command = "pay";
                     String orderType = "other";
-                    long amount = booking.temp_price * 100L;
+                    long amount = booking.temp_price * 100L * countDays(booking.check_in_date, booking.check_out_date);
                     String bankCode = req.getParameter("bankCode");
                     String vnp_TxnRef = VNPayUtil.getRandomNumber(8);
                     String vnp_IpAddr = VNPayUtil.getIpAddress(req);
@@ -127,8 +135,6 @@ public class PaymentController {
             fields.remove("vnp_SecureHashType");
             fields.remove("vnp_SecureHash");
             String signValue = VNPayUtil.hashAllFields(fields);
-            System.out.println("signValue:" + signValue);
-            System.out.println("vnp_SecureHash:" + req.getParameter("vnp_SecureHash"));
             if (signValue.equals(req.getParameter("vnp_SecureHash"))){
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
                 SimpleDateFormat sqlFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

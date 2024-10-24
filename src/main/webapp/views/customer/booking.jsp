@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Model.Booking" %>
+<%@ page import="Controller.PaymentController" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +48,7 @@
                             <td><%=bookings.get(i).check_in_date%></td>
                             <td><%=bookings.get(i).check_out_date%></td>
                             <td><%=bookings.get(i).status%></td>
-                            <td><%=bookings.get(i).payment_id == 0 ? bookings.get(i).temp_price : bookings.get(i).price%></td>
+                            <td><%=bookings.get(i).payment_id == 0 ? bookings.get(i).temp_price * PaymentController.GetVNPayUrlServlet.countDays(bookings.get(i).check_in_date, bookings.get(i).check_out_date) : bookings.get(i).price%></td>
                             <td><%=bookings.get(i).created_at%></td>
                             <td>
                                 <% if (bookings.get(i).payment_id == 0 ) { %>
