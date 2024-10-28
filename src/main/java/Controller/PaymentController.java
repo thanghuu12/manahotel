@@ -4,6 +4,7 @@ import Dao.BookingDao;
 import Dao.PaymentDao;
 import Model.Booking;
 import Model.BookingStatus;
+import Model.Payment;
 import Util.Config;
 import Util.VNPayUtil;
 import com.google.gson.Gson;
@@ -112,7 +113,8 @@ public class PaymentController {
                     job.addProperty("data", paymentUrl);
                     Gson gson = new Gson();
                     resp.getWriter().write(gson.toJson(job));
-                } else {
+                }
+                else {
                     req.getSession().setAttribute("mess", "warning|Đơn đặt phòng đã thanh toán hoặc đã bị hủy.");
                     resp.sendRedirect(req.getContextPath() + "/customer/booking");
                 }
@@ -165,6 +167,17 @@ public class PaymentController {
                 req.getSession().setAttribute("mess", "error|Chữ kí không hợp lệ.");
                 resp.sendRedirect(req.getContextPath() + "/customer/booking");
             }
+        }
+    }
+
+    @WebServlet("/customer/transaction")
+    public static class CustomerViewTransaction extends HttpServlet{
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String customer_id = req.getSession().getAttribute("customer").toString();
+            ArrayList<Payment> payments = PaymentDao.getPaymentsOfCustomer(customer_id);
+            req.setAttribute("payments", payments);
+            req.getRequestDispatcher("/views/customer/transaction.jsp").forward(req, resp);
         }
     }
 }

@@ -78,6 +78,10 @@
                                         <select class="form-control" name="sort" id="sort">
                                             <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("1") ? "selected" : ""%> value="1">Giá tăng dần</option>
                                             <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("2") ? "selected" : ""%> value="2">Giá giảm dần</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("3") ? "selected" : ""%> value="3">Đánh giá từ thấp đến cao</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("4") ? "selected" : ""%> value="4">Đánh giá từ cao đến thấp</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("5") ? "selected" : ""%> value="5">Số lượt đặt từ thấp đến cao</option>
+                                            <option <%=request.getParameter("sort") != null && request.getParameter("sort").equals("6") ? "selected" : ""%> value="6">Số lượt đặt từ cao đến thấp</option>
                                         </select>
                                     </div>
                                 </div>
@@ -109,7 +113,8 @@
                                         <button type="button" class="btn btn-outline-secondary">Xem chi tiết</button>
                                     </a>
                                 </div>
-                                <small class="text-muted">9 mins</small>
+                                <small class="text-muted"><%=roomTypes.get(i).booked%> lượt đặt</small>
+                                <small class="text-muted"><%=roomTypes.get(i).rating%><img style="max-height: 20px" src="${pageContext.request.contextPath}/assets/img/star-yellow.png" alt=""></small>
                             </div>
                         </div>
                     </div>

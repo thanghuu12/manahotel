@@ -13,6 +13,8 @@ public class RoomType {
     public int price;
     public Utility[] utilities;
     public Image[] images;
+    public String booked;
+    public String rating;
 
     public RoomType(int id, int hotel_id, String name, String description, int beds, float area, int price, Utility[] utilities, Image[] images) {
         this.id = id;
@@ -30,7 +32,7 @@ public class RoomType {
         return gson.toJson(this.images);
     }
 
-    public RoomType(int id, int hotel_id, String hotel_name, String name, String description, int beds, float area, int price, Utility[] utilities, Image[] images) {
+    public RoomType(int id, int hotel_id, String hotel_name, String name, String description, int beds, float area, int price, Utility[] utilities, Image[] images, String booked, String rating) {
         this.id = id;
         this.hotel_id = hotel_id;
         this.hotel_name = hotel_name;
@@ -41,5 +43,7 @@ public class RoomType {
         this.price = price;
         this.utilities = utilities;
         this.images = images;
+        this.booked = booked;
+        this.rating = rating;
     }
 }

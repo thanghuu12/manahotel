@@ -25,6 +25,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link collapsed" href="<%=request.getContextPath() + "/customer/transaction"%>">
+                <i class="bi bi-file-earmark"></i>
+                <span>Xem lịch sử giao dịch</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link collapsed" href="<%=request.getContextPath() + "/logout"%>">
                 <i class="bi bi-file-earmark"></i>
                 <span>Đăng xuất</span>
@@ -85,6 +91,12 @@
             <a class="nav-link collapsed" href="<%=request.getContextPath() + "/hotel/manage-room"%>">
                 <i class="bi bi-file-earmark"></i>
                 <span>Quản lý phòng</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<%=request.getContextPath() + "/hotel/statistic"%>">
+                <i class="bi bi-file-earmark"></i>
+                <span>Thống kê</span>
             </a>
         </li>
         <li class="nav-item">

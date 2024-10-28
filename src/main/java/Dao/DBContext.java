@@ -1,9 +1,12 @@
 package Dao;
 
+import Controller.RoomTypeController;
 import Util.Config;
 import org.checkerframework.checker.units.qual.A;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -82,8 +85,18 @@ public class DBContext {
         }
         return ids;
     }
-
+    public static boolean isDateInFuture(String date) {
+        try {
+            LocalDate givenDate = LocalDate.parse(date);
+            LocalDate today = LocalDate.now();
+            return givenDate.isAfter(today);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public static void main(String[] args) throws SQLException {
         System.out.println(Objects.requireNonNull(getConnection()).getCatalog());
+        System.out.println(isDateInFuture("2024-10-29"));
     }
 }

@@ -1,10 +1,7 @@
 package Controller;
 
 import Dao.*;
-import Model.Hotel;
-import Model.Room;
-import Model.RoomType;
-import Model.Utility;
+import Model.*;
 import Util.UploadImage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -13,6 +10,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class RoomTypeController {
@@ -81,6 +80,26 @@ public class RoomTypeController {
     }
     @WebServlet("/room-type")
     public static class ViewRoomType extends HttpServlet{
+        public static boolean isDateInFuture(String date) {
+            try {
+                LocalDate givenDate = LocalDate.parse(date);
+                LocalDate today = LocalDate.now();
+                return !givenDate.isBefore(today);
+            } catch (DateTimeParseException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        public static boolean isFromDateBeforeToDate(String from_date, String to_date) {
+            try {
+                LocalDate firstDate = LocalDate.parse(from_date);
+                LocalDate secondDate = LocalDate.parse(to_date);
+                return firstDate.isBefore(secondDate);
+            }catch (DateTimeParseException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             String id = req.getParameter("id");
@@ -90,10 +109,20 @@ public class RoomTypeController {
             req.setAttribute("hotel", hotel);
             if (req.getParameter("from_date") != null && req.getParameter("to_date") != null) {
                 String from_date = req.getParameter("from_date");
-                String to_date = req.getParameter("to_date");
-                ArrayList<Room> rooms = RoomDao.getAvailableRoom(from_date, to_date, id);
-                req.setAttribute("rooms", rooms);
+                if (isDateInFuture(from_date)) {
+                    String to_date = req.getParameter("to_date");
+                    if (isFromDateBeforeToDate(from_date, to_date)) {
+                        ArrayList<Room> rooms = RoomDao.getAvailableRoom(from_date, to_date, id);
+                        req.setAttribute("rooms", rooms);
+                    } else {
+                        req.setAttribute("warning", "Ngày bắt đầu phải trước ngày kết thúc");
+                    }
+                } else {
+                    req.setAttribute("warning", "Ngày bắt đầu không được ở trong quá khứ");
+                }
             }
+            ArrayList<Review> reviews = ReviewDao.getAllReviewsOfARoomType(id);
+            req.setAttribute("reviews", reviews);
             req.getRequestDispatcher("/views/public/room-type.jsp").forward(req, resp);
         }
     }

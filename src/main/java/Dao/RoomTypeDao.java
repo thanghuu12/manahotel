@@ -192,7 +192,6 @@ public class RoomTypeDao {
     }
 
     public static ArrayList<RoomType> search(String query, String[] utilityIds, String priceFrom, String priceTo, String sort) {
-        //select room_types.* from room_types inner join room_types_has_utilities on room_types.id = room_types_has_utilities.room_type_id where 1 = 1 and (name like '%%' or description like '%%') and price >= ? and price <= ? and utility_id in (1,2);
         try {
             String sql = "WITH UtilityAggregates AS (SELECT rt.id                                   AS room_type_id,\n" +
                     "                                  STRING_AGG(CAST(u.id AS NVARCHAR), ',') AS utility_ids,\n" +
@@ -219,7 +218,9 @@ public class RoomTypeDao {
                     "       ua.utility_ids,\n" +
                     "       ua.utility_names,\n" +
                     "       ia.image_ids,\n" +
-                    "       ia.image_urls\n" +
+                    "       ia.image_urls,\n" +
+                    "       (select count(bookings.id) from bookings inner join rooms on bookings.room_id = rooms.id where bookings.payment_id is not null and rooms.room_type_id = rt.id) as booked,\n" +
+                    "       (select avg(reviews.rating) from reviews inner join bookings on reviews.booking_id = bookings.id inner join rooms on bookings.room_id = rooms.id where rooms.room_type_id = rt.id) as rating\n" +
                     "FROM room_types rt\n" +
                     "         LEFT JOIN UtilityAggregates ua ON rt.id = ua.room_type_id\n" +
                     "         LEFT JOIN ImageAggregates ia ON rt.id = ia.room_type_id\n" +
@@ -265,6 +266,22 @@ public class RoomTypeDao {
                         sql += " order by rt.price DESC";
                         break;
                     }
+                    case "3": {
+                        sql += " ORDER BY rating ASC";
+                        break;
+                    }
+                    case "4": {
+                        sql += " ORDER BY rating DESC";
+                        break;
+                    }
+                    case "5": {
+                        sql += " ORDER BY booked ASC";
+                        break;
+                    }
+                    case "6": {
+                        sql += " ORDER BY booked DESC";
+                        break;
+                    }
                     default: {
                         break;
                     }
@@ -287,7 +304,9 @@ public class RoomTypeDao {
                         resultSet.getFloat("area"),
                         resultSet.getInt("price"),
                         convert2Utility(resultSet.getString("utility_ids"), resultSet.getString("utility_names")),
-                        convert2Image(resultSet.getString("image_ids"), resultSet.getString("image_urls"))
+                        convert2Image(resultSet.getString("image_ids"), resultSet.getString("image_urls")),
+                        resultSet.getString("booked"),
+                        resultSet.getString("rating")
                 ));
             }
             return roomTypes;
