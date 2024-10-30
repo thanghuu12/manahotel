@@ -68,7 +68,7 @@
                 %>
                 <% if (customer_id != null || admin != null || hotel != null) { %>
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="<%=avatar.startsWith("http") ? avatar : request.getContextPath() + "/" + avatar%>" style="width: 40px; height: 50px" alt="Profile" class="rounded-circle">
+                        <img src="<%=avatar.startsWith("http") ? avatar : request.getContextPath() + "/" + avatar%>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%" alt="Profile">
                         <span class="d-none d-md-block dropdown-toggle ps-2"><%=name%></span>
                     </a>
 

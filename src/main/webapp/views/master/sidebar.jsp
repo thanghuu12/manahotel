@@ -39,7 +39,7 @@
         <% } else if (admin_id_side_bar != null) { %>
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="<%=request.getContextPath() + "/admin/admin-control?admin_id=" + admin_id_side_bar%>">
+               href="<%=request.getContextPath() + "/admin/admin-control"%>">
                 <i class="bi bi-file-earmark"></i>
                 <span>Trang cá nhân</span>
             </a>

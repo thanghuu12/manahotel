@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS reviews;
-DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS payments;
 DROP TABLE IF EXISTS room_type_has_images;
 DROP TABLE IF EXISTS images;
@@ -110,6 +110,7 @@ create table room_type_has_images
 create table payments
 (
     id                int primary key identity,
+    customer_id int foreign key references customers(id),
     amount            int,
     txnRef            nvarchar(max),
     orderInfo         nvarchar(max),
@@ -121,7 +122,7 @@ create table payments
     created_at        datetime default current_timestamp,
     paid_at           datetime,
 );
-create table orders
+create table bookings
 (
     id             int primary key identity,
     customer_id    int foreign key references customers (id),
@@ -138,7 +139,7 @@ create table reviews
 (
     id          int primary key identity,
     customer_id int foreign key references customers (id),
-    order_id    int foreign key references orders (id),
+    booking_id    int foreign key references bookings (id),
     rating      int check (rating between 1 and 5),
     comment     nvarchar(max),
     created_at  datetime default current_timestamp

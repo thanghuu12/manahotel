@@ -96,7 +96,6 @@ public class DBContext {
         }
     }
     public static void main(String[] args) throws SQLException {
-        System.out.println(Objects.requireNonNull(getConnection()).getCatalog());
-        System.out.println(isDateInFuture("2024-10-29"));
+        System.out.println(getConnection().getCatalog());
     }
 }

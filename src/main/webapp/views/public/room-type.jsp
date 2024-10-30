@@ -119,7 +119,7 @@
                             <% ArrayList<Review> reviews = (ArrayList<Review>) request.getAttribute("reviews");%>
                             <% for (int i = 0; i < reviews.size(); i++) { %>
                                 <div class="col-12">
-                                    <img src="<%=request.getContextPath()%>/<%=reviews.get(i).customer_avatar%>" alt="customer avatar" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%">
+                                    <img src="<%=reviews.get(i).customer_avatar.startsWith("http") ? reviews.get(i).customer_avatar : request.getContextPath() + "/" + reviews.get(i).customer_avatar%>" alt="customer avatar" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%">
                                     <%=reviews.get(i).customer_name%>
                                     <span style="font-weight: bold" class="bold"><%=reviews.get(i).rating%></span>
                                     <img style="max-height: 20px" src="${pageContext.request.contextPath}/assets/img/star-yellow.png" alt="">

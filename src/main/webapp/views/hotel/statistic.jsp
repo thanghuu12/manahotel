@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <%@include file="../master/head.jsp" %>
-<link href="<%=request.getContextPath()%>/assets/css/bootstrap-rating.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <body>
 <!-- ======= Header ======= -->
@@ -26,6 +25,7 @@
         <div class="row" id="app">
             <div class="row col-12">
                 <h3 class="text-center">Biểu đồ doanh thu</h3>
+                <p style="visibility: hidden">{{key}}</p>
                 <button class="btn" v-on:click="test()">check var</button>
                 <div class="row">
                     <div class="col-4">
@@ -38,9 +38,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <button v-on:click="if (roomTypes.every(object => object.selected)) { roomTypes.forEach(object => object.selected = false); } else { roomTypes.forEach(object => object.selected = true); }; init_chart_revenue();key++" style="width: 100%" :class="roomTypes.every(object => object.selected) ? 'm-1 btn btn-info' : 'm-1 btn btn-outline-info'">{{ roomTypes.every(object => object.selected) ? 'Bỏ chọn tất cả' : 'Chọn tất cả' }}</button>
+                                        <button v-on:click="if (roomTypes.every(object => object.selected)) { roomTypes.forEach(object => object.selected = false); } else { roomTypes.forEach(object => object.selected = true); }; init_chart_revenue();key++;" style="width: 100%" :class="roomTypes.every(object => object.selected) ? 'm-1 btn btn-info' : 'm-1 btn btn-outline-info'">{{ roomTypes.every(object => object.selected) ? 'Bỏ chọn tất cả' : 'Chọn tất cả' }}</button>
                                         <template v-for="value in roomTypes">
-                                            <button v-on:click="value.selected = !value.selected; init_chart_revenue(); key++" style="width: 100%" :class="value.selected === false ? 'm-1 btn btn-outline-info' : 'm-1 btn btn-info'">{{value.name}}</button>
+                                            <button v-on:click="value.selected = !value.selected; key++; init_chart_revenue(); key++" style="width: 100%" :class="value.selected === false ? 'm-1 btn btn-outline-info' : 'm-1 btn btn-info'">{{value.name}}</button>
                                         </template>
                                     </div>
                                     <div class="modal-footer">
@@ -128,11 +128,8 @@
             get_data(){
                 axios.get('<%=request.getContextPath()%>/hotel/api/hotel-get-statistics-data')
                     .then((res) => {
-                        this.bookings = JSON.parse(res.data.bookings)
                         this.payments = JSON.parse(res.data.payments)
                         this.roomTypes = JSON.parse(res.data.roomTypes)
-                        this.rooms = JSON.parse(res.data.rooms)
-                        this.reviews = JSON.parse(res.data.reviews)
                         for (let i = 0; i < this.roomTypes.length; i++) {
                             this.roomTypes[i].selected = false
                         }
@@ -249,7 +246,6 @@
                         })
                     }
                 }
-                console.log(dataSet)
                 if (this.line_chart_revenue == null){
                     this.line_chart_revenue = new Chart('line_chart_revenue', {
                         type: 'line',
@@ -283,7 +279,7 @@
                 }
             },
             test(){
-                this.init_line_chart_revenue();
+                console.log(this.init_line_chart_revenue())
             }
         }
     })

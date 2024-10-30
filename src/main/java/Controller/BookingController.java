@@ -57,26 +57,4 @@ public class BookingController {
             resp.sendRedirect(req.getContextPath() + "/customer/booking");
         }
     }
-
-    @WebServlet("/hotel/api/hotel-get-statistics-data")
-    public static class HotelGetAllBookings extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            String hotel_id = req.getSession().getAttribute("hotel").toString();
-            ArrayList<Booking> bookings = BookingDao.getAllBookingsOfHotel(hotel_id);
-            ArrayList<Payment> payments = PaymentDao.getAllPaymentsOfAHotel(hotel_id);
-            ArrayList<RoomType> roomTypes = RoomTypeDao.getAllRoomTypesOfAHotel(Integer.parseInt(hotel_id));
-            ArrayList<Room> rooms = RoomDao.getAllRoomsOfAHotel(hotel_id);
-            ArrayList<Review> reviews = ReviewDao.getAllReviewOfAHotel(hotel_id);
-            JsonObject jsonObject = new JsonObject();
-            Gson gson = new Gson();
-            jsonObject.addProperty("bookings", gson.toJson(bookings));
-            jsonObject.addProperty("payments", gson.toJson(payments));
-            jsonObject.addProperty("roomTypes", gson.toJson(roomTypes));
-            jsonObject.addProperty("rooms", gson.toJson(rooms));
-            jsonObject.addProperty("reviews", gson.toJson(reviews));
-            resp.setContentType("application/json");
-            resp.getWriter().write(gson.toJson(jsonObject));
-        }
-    }
 }

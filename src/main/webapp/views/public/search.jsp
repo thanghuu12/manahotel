@@ -114,7 +114,11 @@
                                     </a>
                                 </div>
                                 <small class="text-muted"><%=roomTypes.get(i).booked%> lượt đặt</small>
-                                <small class="text-muted"><%=roomTypes.get(i).rating%><img style="max-height: 20px" src="${pageContext.request.contextPath}/assets/img/star-yellow.png" alt=""></small>
+                                <% if (roomTypes.get(i).rating == null) { %>
+                                    <small class="text-muted">Chưa có đánh giá</small>
+                                <% } else { %>
+                                    <small class="text-muted"><%=roomTypes.get(i).rating%><img style="max-height: 20px" src="${pageContext.request.contextPath}/assets/img/star-yellow.png" alt=""></small>
+                                <% } %>
                             </div>
                         </div>
                     </div>

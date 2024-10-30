@@ -33,7 +33,7 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                        <img src="<%=hotel.avatar.startsWith("http") || hotel.avatar.startsWith("https") ? hotel.avatar : request.getContextPath() + "/" + hotel.avatar%>" alt="Profile" class="rounded-circle">
+                        <img src="<%=hotel.avatar.startsWith("http") || hotel.avatar.startsWith("https") ? hotel.avatar : request.getContextPath() + "/" + hotel.avatar%>" alt="Profile"  style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%">
                         <h2>khách sạn: <%=hotel.name%></h2>
                         <h3><%=hotel.email%></h3>
                         <div class="social-links mt-2">
