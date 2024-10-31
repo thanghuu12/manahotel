@@ -39,7 +39,7 @@
         <% } else if (admin_id_side_bar != null) { %>
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="<%=request.getContextPath() + "/admin/admin-control"%>">
+               href="<%=request.getContextPath() + "/admin/admin-control?admin_id=" + admin_id_side_bar%>">
                 <i class="bi bi-person"></i>
                 <span>Trang cá nhân</span>
             </a>
@@ -95,7 +95,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="<%=request.getContextPath() + "/hotel/statistic"%>">
-                <i class="bi bi-ri-bar-chart-2-fill"></i>
+                <i class="ri-bar-chart-2-fill"></i>
                 <span>Thống kê</span>
             </a>
         </li>

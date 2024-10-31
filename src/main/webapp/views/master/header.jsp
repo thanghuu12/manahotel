@@ -56,7 +56,7 @@
                         name = admin.name;
                         email = admin.username;
                         avatar = admin.avatar;
-                        profile_link = request.getContextPath() + "/admin/admin-control?admin_id_side_bar=" + admin.id;
+                        profile_link = request.getContextPath() + "/admin/admin-control?admin_id=" + admin.id;
                     } else if (hotel_id != null) {
                         hotel = HotelDao.getHotelWithId(Integer.parseInt(hotel_id));
                         assert hotel != null;

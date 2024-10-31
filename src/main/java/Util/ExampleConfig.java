@@ -13,7 +13,8 @@ public class ExampleConfig {
     public static final String google_oauth_client_id = "";
     public static final String google_oauth_client_secret = "";
     public static final String google_oauth_redirect_uri = "";
-    public static String vnp_ReturnUrl = "";
+    public static String vnp_ReturnUrl = app_url + "";
     public static String vnp_TmnCode = "";
     public static String secretKey = "";
+    public static String vnp_PayUrl = "";
 }
