@@ -375,4 +375,126 @@ public class RoomTypeDao {
             return null;
         }
     }
+    public static ArrayList<RoomType> selectTop3Rating(){
+        try {
+            String sql = "WITH UtilityAggregates AS (SELECT rt.id                                   AS room_type_id,\n" +
+                    "                                  STRING_AGG(CAST(u.id AS NVARCHAR), ',') AS utility_ids,\n" +
+                    "                                  STRING_AGG(u.name, ',')                 AS utility_names\n" +
+                    "                           FROM room_types rt\n" +
+                    "                                    LEFT JOIN room_types_has_utilities rtu ON rt.id = rtu.room_type_id\n" +
+                    "                                    LEFT JOIN utilities u ON rtu.utility_id = u.id\n" +
+                    "                           GROUP BY rt.id),\n" +
+                    "     ImageAggregates AS (SELECT rt.id                                   AS room_type_id,\n" +
+                    "                                STRING_AGG(CAST(i.id AS NVARCHAR), ',') AS image_ids,\n" +
+                    "                                STRING_AGG(i.url, ',')                  AS image_urls\n" +
+                    "                         FROM room_types rt\n" +
+                    "                                  LEFT JOIN room_type_has_images rti ON rt.id = rti.room_type_id\n" +
+                    "                                  LEFT JOIN images i ON rti.image_id = i.id\n" +
+                    "                         GROUP BY rt.id)\n" +
+                    "SELECT top 3 rt.id          AS room_type_id,\n" +
+                    "       rt.hotel_id    AS hotel_id,\n" +
+                    "       hotels.name as hotel_name,\n" +
+                    "       rt.name        AS room_type_name,\n" +
+                    "       rt.description AS room_type_description,\n" +
+                    "       rt.beds,\n" +
+                    "       rt.area,\n" +
+                    "       rt.price,\n" +
+                    "       ua.utility_ids,\n" +
+                    "       ua.utility_names,\n" +
+                    "       ia.image_ids,\n" +
+                    "       ia.image_urls,\n" +
+                    "       (select count(bookings.id) from bookings inner join rooms on bookings.room_id = rooms.id where bookings.payment_id is not null and rooms.room_type_id = rt.id) as booked,\n" +
+                    "       (select avg(reviews.rating) from reviews inner join bookings on reviews.booking_id = bookings.id inner join rooms on bookings.room_id = rooms.id where rooms.room_type_id = rt.id) as rating\n" +
+                    "FROM room_types rt\n" +
+                    "         LEFT JOIN UtilityAggregates ua ON rt.id = ua.room_type_id\n" +
+                    "         LEFT JOIN ImageAggregates ia ON rt.id = ia.room_type_id\n" +
+                    "         JOIN room_types_has_utilities rtu ON rt.id = rtu.room_type_id\n" +
+                    "         Join hotels on rt.hotel_id = hotels.id\n" +
+                    "where 1 = 1 group by rt.id, rt.hotel_id, rt.name, rt.description, rt.beds, rt.area, rt.price, ua.utility_ids, ua.utility_names, ia.image_ids, ia.image_urls, hotels.name ORDER BY rating DESC;";
+            PreparedStatement preparedStatement = DBContext.getConnection().prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<RoomType> roomTypes = new ArrayList<>();
+            while (resultSet.next()) {
+                roomTypes.add(new RoomType(
+                        resultSet.getInt("room_type_id"),
+                        resultSet.getInt("hotel_id"),
+                        resultSet.getString("hotel_name"),
+                        resultSet.getString("room_type_name"),
+                        resultSet.getString("room_type_description"),
+                        resultSet.getInt("beds"),
+                        resultSet.getFloat("area"),
+                        resultSet.getInt("price"),
+                        convert2Utility(resultSet.getString("utility_ids"), resultSet.getString("utility_names")),
+                        convert2Image(resultSet.getString("image_ids"), resultSet.getString("image_urls")),
+                        resultSet.getString("booked"),
+                        resultSet.getString("rating")
+                ));
+            }
+            return roomTypes;
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public static ArrayList<RoomType> selectTop3Book(){
+        try {
+            String sql = "WITH UtilityAggregates AS (SELECT rt.id                                   AS room_type_id,\n" +
+                    "                                  STRING_AGG(CAST(u.id AS NVARCHAR), ',') AS utility_ids,\n" +
+                    "                                  STRING_AGG(u.name, ',')                 AS utility_names\n" +
+                    "                           FROM room_types rt\n" +
+                    "                                    LEFT JOIN room_types_has_utilities rtu ON rt.id = rtu.room_type_id\n" +
+                    "                                    LEFT JOIN utilities u ON rtu.utility_id = u.id\n" +
+                    "                           GROUP BY rt.id),\n" +
+                    "     ImageAggregates AS (SELECT rt.id                                   AS room_type_id,\n" +
+                    "                                STRING_AGG(CAST(i.id AS NVARCHAR), ',') AS image_ids,\n" +
+                    "                                STRING_AGG(i.url, ',')                  AS image_urls\n" +
+                    "                         FROM room_types rt\n" +
+                    "                                  LEFT JOIN room_type_has_images rti ON rt.id = rti.room_type_id\n" +
+                    "                                  LEFT JOIN images i ON rti.image_id = i.id\n" +
+                    "                         GROUP BY rt.id)\n" +
+                    "SELECT top 3 rt.id          AS room_type_id,\n" +
+                    "       rt.hotel_id    AS hotel_id,\n" +
+                    "       hotels.name as hotel_name,\n" +
+                    "       rt.name        AS room_type_name,\n" +
+                    "       rt.description AS room_type_description,\n" +
+                    "       rt.beds,\n" +
+                    "       rt.area,\n" +
+                    "       rt.price,\n" +
+                    "       ua.utility_ids,\n" +
+                    "       ua.utility_names,\n" +
+                    "       ia.image_ids,\n" +
+                    "       ia.image_urls,\n" +
+                    "       (select count(bookings.id) from bookings inner join rooms on bookings.room_id = rooms.id where bookings.payment_id is not null and rooms.room_type_id = rt.id) as booked,\n" +
+                    "       (select avg(reviews.rating) from reviews inner join bookings on reviews.booking_id = bookings.id inner join rooms on bookings.room_id = rooms.id where rooms.room_type_id = rt.id) as rating\n" +
+                    "FROM room_types rt\n" +
+                    "         LEFT JOIN UtilityAggregates ua ON rt.id = ua.room_type_id\n" +
+                    "         LEFT JOIN ImageAggregates ia ON rt.id = ia.room_type_id\n" +
+                    "         JOIN room_types_has_utilities rtu ON rt.id = rtu.room_type_id\n" +
+                    "         Join hotels on rt.hotel_id = hotels.id\n" +
+                    "where 1 = 1 group by rt.id, rt.hotel_id, rt.name, rt.description, rt.beds, rt.area, rt.price, ua.utility_ids, ua.utility_names, ia.image_ids, ia.image_urls, hotels.name ORDER BY booked DESC;";
+            PreparedStatement preparedStatement = DBContext.getConnection().prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<RoomType> roomTypes = new ArrayList<>();
+            while (resultSet.next()) {
+                roomTypes.add(new RoomType(
+                        resultSet.getInt("room_type_id"),
+                        resultSet.getInt("hotel_id"),
+                        resultSet.getString("hotel_name"),
+                        resultSet.getString("room_type_name"),
+                        resultSet.getString("room_type_description"),
+                        resultSet.getInt("beds"),
+                        resultSet.getFloat("area"),
+                        resultSet.getInt("price"),
+                        convert2Utility(resultSet.getString("utility_ids"), resultSet.getString("utility_names")),
+                        convert2Image(resultSet.getString("image_ids"), resultSet.getString("image_urls")),
+                        resultSet.getString("booked"),
+                        resultSet.getString("rating")
+                ));
+            }
+            return roomTypes;
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }

@@ -105,7 +105,7 @@
                         <div class="card-body">
                             <p class="card-text"><%=roomTypes.get(i).hotel_name%></p>
                             <p class="card-text"><%=roomTypes.get(i).name%></p>
-                            <p class="card-text"><%=roomTypes.get(i).description%></p>
+                            <p class="card-text" style="max-height: 100px; min-height: 100px;overflow: hidden;text-overflow: ellipsis"><%=roomTypes.get(i).description%></p>
                             <p class="card-text"><%=roomTypes.get(i).price%>(vnd)</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">

@@ -26,7 +26,6 @@
             <div class="row col-12">
                 <h3 class="text-center">Biểu đồ doanh thu</h3>
                 <p style="visibility: hidden">{{key}}</p>
-                <button class="btn" v-on:click="test()">check var</button>
                 <div class="row">
                     <div class="col-4">
                         <button class="btn btn-success" style="width: 100%" data-bs-toggle="modal" data-bs-target="#bar_chart_revenue_modal">Chọn loại phòng</button>
@@ -50,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div v-if="chart_to_show != 3" class="col-6">
                         <div class="row">
                             <div class="row col-6">
                                 <label for="from_date" class="col-sm-4 col-form-label">Từ ngày</label>
@@ -66,26 +65,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div v-if="chart_to_show != 3" class="col-2">
                         <button v-on:click="bar_chart_revenue_from_date='';bar_chart_revenue_to_date='';init_chart_revenue();" class="btn btn-success">
                             Toàn thời gian
                         </button>
                     </div>
-                </div>
-            </div>
-            <div class="row col-12 d-flex justify-content-center">
-                <div class="col-4 row">
-                    <div class="col-6">
-                        <button style="width: 100%" v-on:click="is_bar_chart_revenue = !is_bar_chart_revenue; init_chart_revenue();" :class="is_bar_chart_revenue ? 'btn btn-primary' : 'btn btn-outline-primary'">Xem biểu đồ cột</button>
-                    </div>
-                    <div class="col-6">
-                        <button style="width: 100%" v-on:click="is_bar_chart_revenue = !is_bar_chart_revenue; init_chart_revenue();" :class="!is_bar_chart_revenue ? 'btn btn-primary' : 'btn btn-outline-primary'">Xem biểu đồ tròn</button>
+                    <div class="col-8" v-if="chart_to_show == 3">
+                        <div class="row col-6">
+                            <label for="year" class="col-sm-4 col-form-label">Chọn năm</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="year" type="number" min="1900" max="2099" step="1" v-on:change="init_chart_revenue();" v-model="revenue_chart_year" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <canvas v-show="is_bar_chart_revenue" id="bar_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
-            <canvas v-show="!is_bar_chart_revenue" id="pie_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
-            <canvas id="line_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
+            <div class="row col-12 d-flex justify-content-center m-1">
+                <div class="col-8 row">
+                    <div class="col-4">
+                        <button style="width: 100%" v-on:click="chart_to_show = 1; init_chart_revenue();" :class="chart_to_show === 1 ? 'btn btn-primary' : 'btn btn-outline-primary'">Xem biểu đồ cột</button>
+                    </div>
+                    <div class="col-4">
+                        <button style="width: 100%" v-on:click="chart_to_show = 2; init_chart_revenue();" :class="chart_to_show === 2 ? 'btn btn-primary' : 'btn btn-outline-primary'">Xem biểu đồ tròn</button>
+                    </div>
+                    <div class="col-4">
+                        <button style="width: 100%" v-on:click="chart_to_show = 3; init_chart_revenue();" :class="chart_to_show === 3 ? 'btn btn-primary' : 'btn btn-outline-primary'">Xem biểu đồ đường</button>
+                    </div>
+                </div>
+            </div>
+            <canvas v-show="chart_to_show === 1" id="bar_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
+            <canvas v-show="chart_to_show === 2" id="pie_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
+            <canvas v-show="chart_to_show === 3" id="line_chart_revenue" style="max-height: 400px;width: 100%"></canvas>
             <div class="row col-12">
                 <h3 class="text-center">Biểu đồ doanh thu</h3>
             </div>
@@ -111,11 +121,10 @@
             roomTypes: [],
             rooms: [],
             reviews: [],
-
             bar_chart_revenue: null,
             pie_chart_revenue: null,
             line_chart_revenue: null,
-            is_bar_chart_revenue: true,
+            chart_to_show: 1,
             bar_chart_revenue_from_date: '',
             bar_chart_revenue_to_date: '',
             revenue_chart_year: new Date().getFullYear(),
@@ -170,7 +179,7 @@
                         yValues.push(temp)
                     }
                 }
-                if (this.is_bar_chart_revenue){
+                if (this.chart_to_show === 1){
                     if (this.bar_chart_revenue == null){
                         this.bar_chart_revenue = new Chart('bar_chart_revenue', {
                             type: 'bar',
@@ -198,7 +207,8 @@
                         this.bar_chart_revenue.data.labels = xValues;
                         this.bar_chart_revenue.update();
                     }
-                } else {
+                }
+                if (this.chart_to_show === 2){
                     if (this.pie_chart_revenue == null){
                         this.pie_chart_revenue = new Chart('pie_chart_revenue', {
                             type: "pie",
@@ -226,7 +236,9 @@
                         this.pie_chart_revenue.update();
                     }
                 }
-
+                if (this.chart_to_show === 3){
+                    this.init_line_chart_revenue();
+                }
             },
             init_line_chart_revenue(){
                 let dataSet = [];
@@ -235,7 +247,7 @@
                         let array_month_amount = new Array(12).fill(0);
                         for (let j = 0; j < this.payments.length; j++){
                             let temp_date = new Date(this.payments[j].paid_at)
-                            if (temp_date.getFullYear() === this.revenue_chart_year && this.payments[j].room_type_id === this.roomTypes[i].id){
+                            if (temp_date.getFullYear() === parseInt(this.revenue_chart_year) && this.payments[j].room_type_id === this.roomTypes[i].id){
                                 array_month_amount[temp_date.getMonth()] += this.payments[j].amount
                             }
                         }
@@ -278,9 +290,6 @@
                     this.line_chart_revenue.update()
                 }
             },
-            test(){
-                console.log(this.init_line_chart_revenue())
-            }
         }
     })
 </script>
