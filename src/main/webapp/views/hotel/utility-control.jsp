@@ -25,7 +25,7 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-5">
-                <form action="<%=request.getContextPath()%>/admin/manage-utility" method="post">
+                <form action="<%=request.getContextPath()%>/hotel/manage-utility" method="post">
                     <div class="col-12">
                         <label for="name" class="form-label">Tên</label>
                         <div class="input-group has-validation">
@@ -67,7 +67,7 @@
                                 <h5 class="modal-title">Thêm mới khách sạn</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="<%=request.getContextPath()%>/admin/update-utility" method="post">
+                            <form action="<%=request.getContextPath()%>/hotel/update-utility" method="post">
                                 <input type="hidden" name="id" id="id">
                                 <div class="modal-body">
                                     <div class="col-12">

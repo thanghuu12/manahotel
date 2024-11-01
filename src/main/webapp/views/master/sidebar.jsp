@@ -63,12 +63,6 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="<%=request.getContextPath() + "/admin/manage-utility"%>">
-                <i class="ri-chat-settings-fill"></i>
-                <span>Quản lý tiện ích</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link collapsed" href="<%=request.getContextPath() + "/logout"%>>">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Đăng xuất</span>
@@ -79,6 +73,12 @@
             <a class="nav-link collapsed" href="<%=request.getContextPath() + "/hotel/profile"%>">
                 <i class="bi bi-person"></i>
                 <span>Trang cá nhân</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<%=request.getContextPath() + "/hotel/manage-utility"%>">
+                <i class="ri-chat-settings-fill"></i>
+                <span>Quản lý tiện ích</span>
             </a>
         </li>
         <li class="nav-item">

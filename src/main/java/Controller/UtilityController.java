@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class UtilityController {
-    @WebServlet("/admin/manage-utility")
+    @WebServlet("/hotel/manage-utility")
     public static class ManageUtility extends HttpServlet{
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             ArrayList<Utility> utilities = UtilityDao.getAllUtilities();
             req.setAttribute("utilities", utilities);
-            req.getRequestDispatcher("/views/admin/utility-control.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/hotel/utility-control.jsp").forward(req, resp);
         }
 
         @Override
@@ -29,11 +29,11 @@ public class UtilityController {
             } else {
                 req.getSession().setAttribute("mess", "error|Lỗi hệ thống.");
             }
-            resp.sendRedirect(req.getContextPath() + "/admin/manage-utility");
+            resp.sendRedirect(req.getContextPath() + "/hotel/manage-utility");
         }
     }
 
-    @WebServlet("/admin/update-utility")
+    @WebServlet("/hotel/update-utility")
     public static class UpdateUtility extends HttpServlet{
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -44,7 +44,7 @@ public class UtilityController {
             } else {
                 req.getSession().setAttribute("mess", "error|Lỗi hệ thống.");
             }
-            resp.sendRedirect(req.getContextPath() + "/admin/manage-utility");
+            resp.sendRedirect(req.getContextPath() + "/hotel/manage-utility");
         }
     }
 }
